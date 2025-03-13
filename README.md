@@ -31,18 +31,18 @@ React 18.2.0 이전까지만 해도 JS 라이브러리임을 강조 했으나 **
 ### React 개발환경 구축
 
 - Node.js를 8.2.0이상을 설치하면 npm, npx 자동으로 설치
-![alt text](/react-1/image_READMEver/intsall.png)
+![alt text](/image_READMEver/intsall.png)
 
 - create-react-app@버전 이 가능함.
-![alt text](/react-1/image_READMEver/CRA.png)
+![alt text](/image_READMEver/CRA.png)
 
 - cd <리액트 만든 폴더> 후 npm start React 실행.
-![alt text](/react-1/image_READMEver/npmstart.png)
+![alt text](/image_READMEver/npmstart.png)
 
 ---
 ### 리액트 프로젝트 파일의 구조와 역할
 
-![alt text](/react-1/image_READMEver/project_role.png)
+![alt text](/image_READMEver/project_role.png)
 
 - 중요 폴더더 
     - src : React 앱의 주요 코드가 위치하는 폴더.
