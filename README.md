@@ -37,6 +37,7 @@ React 18.2.0 이전까지만 해도 JS 라이브러리임을 강조 했으나 **
 ![alt text](/image_READMEver/CRA.png)
 
 - cd <리액트 만든 폴더> 후 npm start React 실행.
+
 ![alt text](/image_READMEver/npmstart.png)
 
 ---
