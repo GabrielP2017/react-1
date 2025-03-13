@@ -27,3 +27,29 @@ React 18.2.0 이전까지만 해도 JS 라이브러리임을 강조 했으나 **
 프론트엔드 개발자들의 필수 과목.
 
 ---
+
+### React 개발환경 구축
+
+- Node.js를 8.2.0이상을 설치하면 npm, npx 자동으로 설치
+![alt text](/react-1/image_READMEver/intsall.png)
+
+- create-react-app@버전 이 가능함.
+![alt text](/react-1/image_READMEver/CRA.png)
+
+- cd <리액트 만든 폴더> 후 npm start React 실행.
+![alt text](/react-1/image_READMEver/npmstart.png)
+
+---
+### 리액트 프로젝트 파일의 구조와 역할
+
+![alt text](/react-1/image_READMEver/project_role.png)
+
+- 중요 폴더더 
+    - src : React 앱의 주요 코드가 위치하는 폴더.
+        - App.css : App.js에 적용되는 스타일.
+        - App.js : 메인 컴포넌트.
+        - index.css : 전역 스타일
+        - index.js : React 앱의 진입점점
+    - gitignore : Git에 추가하지 않을 파일 목록 정의.
+    - package-lock.json : 설치된 패키지의 정확한 버전이 기록된 파일.
+    - package.json : 프로젝트의 의존성 목록과 실행 스크랩트가 포함된 파일.
