@@ -27,6 +27,8 @@ __src/index.js__
 __src/App.css && index.css__
 - App.js && index.js 의 스타일을 정의.
 
+---
+
 ### 의존성 관리와 package.json
 
 package.json = 패키지의 의존성을 관리하는 파일.
@@ -44,8 +46,61 @@ package.json = 패키지의 의존성을 관리하는 파일.
 
 __의존성을 관리하는 이유__
 - 손쉬운 설치 및 업데이트
+    - npm install 로 바로 설치 가능.
 - 일관된 개발 환경 유지
+    - 특히 package-lock.json은 버전이 __정확히__ 써져있다.
 - 중복 설치 방지
+
+__의존성 내용의 종류__<br>
+__dependencies__ : 실제 코드에 사용하는 라이브러리
+scripts : 명령어의 모음
+
+__package.json과 package-lock.json의 차이__<br>
+![alt text](/image_READMEver/Chai.png)
+- 팀 프로젝트 시 package-lock.json을 유지하는게 좋다.
+
+- package.json를 유지해야하는 이유
+    - 프로젝트의 의존성 정보 제공
+        - 어떤 패키지를 사용하는지 정의하는 역할
+    - 버전 범위 설정 가능
+    - 스크립트와 메타데이터 저장
+        - scripts에 명령어 저장 가능.
+    - 새로운 패키지 설치및 관리
+        - package.json이 없으면 새로운 패키지를 추가할 수 없다.
+---
+### node module의 재설치
+
+- 재설치 해야하는 상황
+    - 팀 작업을 하면서 프로젝트 파일을 clone 했을 경우
+    - 개인이 다른 PC에서 clone을 받아 계속 개발
+    - 프로젝트에 생긴 문제
+> clone을 받은 경우
+```
+$npm install을 실행하면서 패키지를 다시 설치한다.
+```
+
+> 프로젝트의 오류나 의존성 등의 문제
+```
+$ rm -rf node_modules package-lock.json 
+// node_modules와 package-lock.json 삭제.
+$ npm cache clean --force // 캐쉬 초기화
+$ npm install // 다시 재설치
+```
+
+- package-lock.json을 삭제하는 이유
+    - 그 자체가 손상되어 있거나, 잘못된 의존성이 들어가있을 때
+    - 최신버전의 패키지를 다시 받고 싶을 때
+    - 다른 팀원이 이상한 상태로 업데이트했을 때
+
+#### ⚠️이렇듯 의존성 충돌, 패키지 문제가 생기면 삭제 후 재설치가 좋다.
+---
+
+### React의 핵심 요소. component
+
+- 컴포넌트 단위로 개발하여 레고를 조립하듯 완성.
+- 컴포넌트(component) : 작은 기능을 실행하는 하나의 모듈. class 같은 것.
+
+컴포넌트의 조립 과정에만 집중. 코드 자체를 이해할 필요는 없다.
 
 ## 2025.03.15(2주차)
 
