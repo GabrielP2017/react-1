@@ -76,7 +76,7 @@ __package.json과 package-lock.json의 차이__<br>
     - 프로젝트에 생긴 문제
 > clone을 받은 경우
 ```
-$npm install을 실행하면서 패키지를 다시 설치한다.
+$npm install // 실행하여 패키지를 다시 설치한다.
 ```
 
 > 프로젝트의 오류나 의존성 등의 문제
@@ -101,6 +101,134 @@ $ npm install // 다시 재설치
 - 컴포넌트(component) : 작은 기능을 실행하는 하나의 모듈. class 같은 것.
 
 컴포넌트의 조립 과정에만 집중. 코드 자체를 이해할 필요는 없다.
+
+### component를 사용한 유저 인터페이스 생성
+- component로 사용자 인터페이스를 구축
+- 대문자로 시작되는 </> 태그에 들어가는 것은 독립된 컴포넌트이다. 
+
+> _예제_
+```javascript
+function Video({ video }) {
+  return (
+    <div>
+      <Thumbnail video={video} />
+      <a href={video.url}>
+        <h3>{video.title}</h3>
+        <p>{video.description}</p>
+      </a>
+      <LikeButton video={video} />
+    </div>
+  );
+}
+```
+> _결과 화면_
+
+![alt text](/image_READMEver/videojs.png)
+
+### component를 작성하는 JS와 Markup
+- 컴포넌트는 기본적으로 JS함수 이다.
+- 조건에 따라 화면을 다르게 표시하고 싶으면 if문.
+- 목록 표시 = map()
+- JSX. JS의 확장 문법이며, html,js를 한번에 쓸 수 있다.
+> _예제_
+```javascript
+function VideoList({ videos, emptyHeading }) {
+  const count = videos.length;
+  let heading = emptyHeading;
+  if (count > 0) {
+    const noun = count > 1 ? 'Videos' : 'Video';
+    heading = count + ' ' + noun;
+  } // 로직과 컴포넌트는 가까히 둘 것.
+  return (
+    <section>
+      <h2>{heading}</h2>
+      {videos.map(  video =>
+        <Video key={video.id} video={video} />
+      )} {/* 목록 표시 */}
+    </section>
+  );
+}
+```
+> _결과 화면_
+
+![alt text](/image_READMEver/VideoList.png)
+
+### 필요한 곳에 상호작용 기능 추가
+- 데이터를 수신하고 내용을 반환
+- 사용자의 입력을 받아 컴포넌트에 전달.
+
+> _예제_ : 두개의 컴포넌트를 결합한 또다른 컴포넌트 이다.
+```jsx
+import { useState } from 'react';
+
+function SearchableVideoList({ videos }) {
+  const [searchText, setSearchText] = useState('');
+  const foundVideos = filterVideos(videos, searchText);
+  return (
+    <> {/* 두개의 컴포넌트가 합쳐짐. */}
+      <SearchInput
+        value={searchText}
+        onChange={newText => setSearchText(newText)} />
+      <VideoList
+        videos={foundVideos}
+        emptyHeading={`No matches for “${searchText}”`} />
+    </>
+  );
+}
+```
+> _결과 화면_
+
+![alt text](/image_READMEver/SVlist.png)
+
+### 프레임워크를 통해 풀스택으로 만들기
+- 라우팅및 데이터를 가져오기 방법을 규정하진 않음.
+- 전체 앱을 빌드하려면 full-stack React Framework를 사용.
+- 풀스택을 원한다면 next.js를 많이 사용함.
+- full-stack App을 개발할거면 Framework를 사용하는 것이 좋다.
+
+> _예제_
+```jsx
+import { db } from './database.js';
+import { Suspense } from 'react';
+
+async function ConferencePage({ slug }) {
+  const conf = await db.Confs.find({ slug });
+  return (
+    <ConferenceLayout conf={conf}>
+      <Suspense fallback={<TalksLoading />}>
+        <Talks confId={conf.id} />
+      </Suspense>
+    </ConferenceLayout>
+  );
+}
+
+async function Talks({ confId }) {
+  const talks = await db.Talks.findAll({ confId });
+  const videos = talks.map(talk => talk.video);
+  return <SearchableVideoList videos={videos} />;
+}
+```
+> _결과 화면_
+
+![alt text](/image_READMEver/ConferencePage.png)
+
+### 모든 플랫폼에서 최고의 성능을 발휘하는 React
+- 동일한 기술을 사용 => 웹 앱과 네이티브 앱 둘다 구축가능.
+- 각 플랫폼의 강점을 살린 통합 인터페이스 구현.
+
+__웹의 본질__
+- 웹은 빠르게 로드되길 기대한다.
+- React를 사용하면 서버에서 데이터를 가져오는 동안(= 로딩) HTML을 먼저 스트리밍해 먼저 보여줘 JS코드가 로드되기 전에 콘텐츠를 잠진적으로 채움.
+- 클라이언트 측은 표준 웹 API를 사용해서, 렌더링 도중에도 UI를 반응하도록 함.
+#### 결론 : 빠른 랜더링을 도와줌.
+
+__진정한 네이티브 UX 구현__
+- React Native와 Expo를 사용 => Android, iOS 등을 위한 앱을 React로 빌드.
+    - 예를 들어 Mac,리닉스는 창 닫는게 왼쪽에 있으나 windows는 오른쪽에 있다. 이런 차이점을 극복해준다.
+- Web View가 아닌 Android 및 iOS View 사용.
+- 웹 개발자도 네이티브 개발자가 된다.
+    - 그렇게 다양한 플랫폼에 앱 출시 가능.
+- 기업은 플랫폼간의 장벽을 허물고 전체 기능을 협업을 통해 개발할 수 있는 팀을 구성 가능.
 
 ## 2025.03.15(2주차)
 
