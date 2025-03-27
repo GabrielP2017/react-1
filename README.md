@@ -149,6 +149,73 @@ return(
 
 ---
 ### 조건부 랜더링과 목록 랜더링
+
+#### 조건문(조건부 랜더링)
+> if-else 
+```jsx
+  //조건부로 jSX포함 가능.
+let content;
+
+let isLoggedin = true;
+
+if(isLoggedin){
+  content = <AdminPanel/>;
+} else {
+  content = <Loginform/>;
+}
+return(
+  <div>
+    {content}
+  </div>
+)
+```
+> 삼항 연산자
+, JSX에서 동작.
+```jsx
+let isLoggedin = true;
+
+<div>
+  {isLoggedin ? (<AdminPanel/>) : (<Loginform/>)}
+</div>
+```
+> 이항 연산자( &&, || )
+, JSX에서 동작.
+
+```jsx
+// isLoggedin이 참 이면 실행.
+let isLoggedin = true;
+
+<div>
+  {isLoggedin && (<AdminPanel/>)}
+</div>
+// isLoggedin이 거짓 이면 실행.
+<div>
+  {isLoggedin || (<Loginform/>)}
+</div>
+```
+
+#### 리스트(목록 랜더링)
+
+- for문 및 map()을 사용해서 랜더링.
+- Map()은 ```<li>```에 속성이 있다.
+
+> list와 map()
+```jsx
+//리스트
+const pro = [
+  {title:'Cabbage',id:1},
+  {title:'Rabbit',id:2},
+  {title:'Apple',id:3}, 
+];
+
+//map()
+const listitems = products.map(product => <li key={product.id}>{product.title}</li>);
+// id는 key안에 title은 태그로 감싸기.
+return(
+  <ul>{listItems}</ul>
+);
+```
+
 ---
 ### 이벤트에 응답하고 화면 업데이트
 ---
