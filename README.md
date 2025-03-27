@@ -1,5 +1,53 @@
 # 202030222 이강민
 
+## 2025.03.27(4주차)
+
+### component 생성 및 중첩
+
+__component__
+- 고유한 로직과 모양을 가진 UI의 일부
+- 버튼처럼 작거나, 전체 페이지처럼 큼
+- 마크업을 반환하는 JS 함수.
+ - __nesting(중첩)__
+> 컴포넌트는 컨테이너 안에서 오른쪽 결과처럼 할 수 있다.
+![alt text](/image_READMEver/Nesting_설명.png)
+
+__export default 선언 위치__
+
+어떤 방향이든 상관이 없다! 하지만 공식 트랜드는 위에서 하는 것
+```JS
+export default function MyApp(){
+
+}
+
+//위를 쓰든 아래를 쓰든 상관없다.
+function MyApp(){
+
+}
+export default MyApp;
+```
+
+#### export default = 기본 컴포넌트 지정
+
+__[ export default와 export의 차이 ]__
+- __(Named)export__
+  - 하나의 파일 안에 여러개의 컴포넌트가 있을 때 사용.
+  - 사용하는 쪽에서는 컴포넌트의 정확한 이름을 명시 ( 예시 : ```import { add } from "./math"```)
+- __export default__
+  - 하나의 파일 안에서 하나의 컴포넌트만 내보내는 경우
+  - 사용하는 쪽에서는 어떤 이름을 사용하든 상관 없음. ( 예시 : ```import ccc from "./calculator"```)
+
+
+### 마크업과 스타일 추가
+
+### 데이터 표시
+
+### 조건부 랜더링과 목록 랜더링
+
+### 이벤트에 응답하고 화면 업데이트
+
+### component 간에 데이터를 공유
+
 ## 2025.03.20(3주차)
 
 ### 리액트 프로젝트 파일의 구조와 역할
