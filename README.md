@@ -37,15 +37,121 @@ __[ export default와 export의 차이 ]__
   - 하나의 파일 안에서 하나의 컴포넌트만 내보내는 경우
   - 사용하는 쪽에서는 어떤 이름을 사용하든 상관 없음. ( 예시 : ```import ccc from "./calculator"```)
 
+#### export default 예시
+
+> Mybutton.js
+```JS
+export default function Mybutton() {
+    return(
+      <button>Button</button>
+    )
+  
+  }
+
+// export default Mybutton; 로 해도 됨.
+```
+> App.js
+```js
+import MyB from './Mybutton'; // 이름을 다채롭게 적용 가능.
+
+export default function App() {
+      
+  return(
+    <div>
+      <h1>hello React</h1>
+      <MyB/> {/* 여기다가 씀 */}
+    </div>
+  )
+
+}
+```
+
+#### (Named)export 예시
+
+>ButtonLib.js
+```JS
+//named export
+
+function Button() {
+    return(
+        <button>Button1</button>
+    )
+}
+
+function Button2() {
+    return(
+        <button>Button1</button>
+    )
+}
+
+function Button3() {
+    return(
+        <button>Button1</button>
+    )
+}
+
+export {Button, Button2, Button3}; // default가 아니면 이렇게 해준다.
+```
+>App.js
+```JS
+import { Button,Button2 } from './ButtonLib'; // named export로써 필요한것만 빼온다. ( 이름을 다채롭게 지정하는건 못함 )
+```
+---
 
 ### 마크업과 스타일 추가
 
+#### JSX
+- 마크업 문법
+- 편의성을 위해서 사용
+- HTML보다 더욱 엄격하다.
+- ```<br/>```같이 싱글 태그라도 무조건 __닫아야한다.__
+- 컴포넌트를 JSX태그로 변환
+- 컴포넌트를 ```<>...</>```나 ```<div>...</div>```처럼 감싸줘야한다.
+  ```jsx
+  export default function App() {  
+    return(
+      <> {/* 이런식으로 감싸줘야한다. 아니면 에러남 */}
+        <h1>hello React</h1>
+      </>
+    )
+  }
+  ```
+#### 스타일
+
+- className으로 CSS클래스 지정. className은 HTML의 class 속성과 동일.
+```<img className="a"/>```
+- CSS파일을 추가하는 방법을 규정하진 않음.
+- HTML에 ```<link>``` 태그로 연결시켜주는 방법은 추천하지 않는다
+(WHY? 정적 페이지를 수정해야 하기 때문에.)
+
+---
 ### 데이터 표시
 
+> JSX를 사용하면 JS에 마크업을 넣는다 = JS안의 마크업 안에 JS를 넣는다.
+- Escape Back : JS로 __탈출__ 하여변수나 표현식을 사용하는 것. 
+- {} 중괄호를 사용해서 표현식을 사용자에게 표시.
+```jsx
+return(
+  <>
+    <h1>
+      {user.name} {/* 자바 스크립트로 Escape */}
+    </h1>
+  </>
+)
+```
+```jsx
+// src에 user.imageurl 변수 값을 전달하여 이미지의 경로를 설정.
+return(
+  <img className="avater" {user.imageurl}/>
+)
+//하지만 className="avater"같이 __단순히 문자열을 전달__ 하면 중괄호({}) 대신 큰따옴표("")를 친다.
+```
+
+---
 ### 조건부 랜더링과 목록 랜더링
-
+---
 ### 이벤트에 응답하고 화면 업데이트
-
+---
 ### component 간에 데이터를 공유
 
 ## 2025.03.20(3주차)
