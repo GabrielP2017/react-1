@@ -10,7 +10,7 @@ __component__
 - 마크업을 반환하는 JS 함수.
  - __nesting(중첩)__
 > 컴포넌트는 컨테이너 안에서 오른쪽 결과처럼 할 수 있다.
-![alt text](/image_READMEver/Nesting_설명.png)
+![alt text](./image_READMEver/Nesting_설명.png)
 
 __export default 선언 위치__
 
@@ -198,6 +198,7 @@ let isLoggedin = true;
 
 - for문 및 map()을 사용해서 랜더링.
 - Map()은 ```<li>```에 속성이 있다.
+- key를 통해 확인.
 
 > list와 map()
 ```jsx
@@ -215,11 +216,6 @@ return(
   <ul>{listItems}</ul>
 );
 ```
-
----
-### 이벤트에 응답하고 화면 업데이트
----
-### component 간에 데이터를 공유
 
 ## 2025.03.20(3주차)
 
@@ -277,7 +273,7 @@ __dependencies__ : 실제 코드에 사용하는 라이브러리
 scripts : 명령어의 모음
 
 __package.json과 package-lock.json의 차이__<br>
-![alt text](/image_READMEver/Chai.png)
+![alt text](./image_READMEver/Chai.png)
 - 팀 프로젝트 시 package-lock.json을 유지하는게 좋다.
 
 - package.json를 유지해야하는 이유
@@ -344,7 +340,7 @@ function Video({ video }) {
 ```
 > _결과 화면_
 
-![alt text](/image_READMEver/videojs.png)
+![alt text](./image_READMEver/videojs.png)
 
 ### component를 작성하는 JS와 Markup
 - 컴포넌트는 기본적으로 JS함수 이다.
@@ -372,7 +368,7 @@ function VideoList({ videos, emptyHeading }) {
 ```
 > _결과 화면_
 
-![alt text](/image_READMEver/VideoList.png)
+![alt text](./image_READMEver/VideoList.png)
 
 ### 필요한 곳에 상호작용 기능 추가
 - 데이터를 수신하고 내용을 반환
@@ -399,7 +395,7 @@ function SearchableVideoList({ videos }) {
 ```
 > _결과 화면_
 
-![alt text](/image_READMEver/SVlist.png)
+![alt text](./image_READMEver/SVlist.png)
 
 ### 프레임워크를 통해 풀스택으로 만들기
 - 라우팅및 데이터를 가져오기 방법을 규정하진 않음.
@@ -431,7 +427,7 @@ async function Talks({ confId }) {
 ```
 > _결과 화면_
 
-![alt text](/image_READMEver/ConferencePage.png)
+![alt text](./image_READMEver/ConferencePage.png)
 
 ### 모든 플랫폼에서 최고의 성능을 발휘하는 React
 - 동일한 기술을 사용 => 웹 앱과 네이티브 앱 둘다 구축가능.
@@ -486,19 +482,19 @@ React 18.2.0 이전까지만 해도 JS 라이브러리임을 강조 했으나 **
 ### React 개발환경 구축
 
 - Node.js를 8.2.0이상을 설치하면 npm, npx 자동으로 설치
-![alt text](/image_READMEver/intsall.png)
+![alt text](./image_READMEver/intsall.png)
 
 - create-react-app@버전 이 가능함.
-![alt text](/image_READMEver/CRA.png)
+![alt text](./image_READMEver/CRA.png)
 
 - cd <리액트 만든 폴더> 후 npm start React 실행.
 
-![alt text](/image_READMEver/npmstart.png)
+![alt text](./image_READMEver/npmstart.png)
 
 ---
 ### 리액트 프로젝트 파일의 구조와 역할
 
-![alt text](/image_READMEver/project_role.png)
+![alt text](./image_READMEver/project_role.png)
 
 - 중요 폴더
     - src : React 앱의 주요 코드가 위치하는 폴더.
