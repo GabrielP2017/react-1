@@ -13,7 +13,10 @@ export default function ShoppingList() {
     >{product.title}</li>);
     
     return(
-        <ul>{listItems}</ul>
+        <div style={{textAlign: 'center'}}>
+            <ul style={{ display: 'inline-block', margin: 0, padding: 0 }}
+            >{listItems}</ul>
+        </div>
     )
     
 }

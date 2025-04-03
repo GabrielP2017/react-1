@@ -1,5 +1,252 @@
 # 202030222 이강민
 
+## 2025.04.03(5주차)
+
+### 이벤트에 응답하기
+
+- event handler 함수를 선언하면 event에 응답 가능
+```js
+function MyButton(){
+  function handleClick(){
+    alert("sasdf");
+  }
+
+  return(
+    <button onClick={handleClick}>Button</button>
+    // {handleClick}에 소괄호가 없다. = 전달만 하면 되기 때문.
+  )
+}
+```
+
+---
+
+### 화면 업데이트하기
+
+__useState__ ★중요★
+- 특정 정보를 "기억"해 두었다가 표시. ex) 버튼이 클릭된 횟수 세기.
+> 쓰는 법
+```js
+import { useState } from 'react';
+```
+
+> 활용
+```js
+function MyButton() {
+  const [count, setCount] = useState(0);
+  // 배열([])로 저장. [현재 상태값, 상태를 업데이트하는 함수]
+  // useState에 (0)을 넣어줬기 때문에 count가 0이 됨.
+  // count 하나만 넣으면 그거 자체가 배열이 되어버려 [0, ƒ setState()]로 출력됨.
+
+  function handleClick() {
+    setCount(count + 1); // 카운트 늘려주기
+  }
+
+  return (
+    <button onClick={handleClick}>
+      Clicked {count} times 
+    </button> // 카운트 표시
+  );
+}
+```
+
+> 배열 비구조화 할당
+```js
+const [count, setCount] = useState(0);
+// 관용적인 표현.
+```
+useState는 변수와 함수를 할당 받는데 이름은 자유롭게 지정받지만
+<br>[ test, setTest ] 처럼 작성하는것이 일반적.<br>
+한마디로 [ 변수, set변수 ]를 붙인 것을 관용적으로 사용한다. 그리고 뒤에 오는 것은 `업데이트 함수`이다.
+
+__각 버튼이 고유한 `count` state를 “기억”하고 다른 버튼에 영향을 주지 않는다__
+```js
+  <div>
+    <h1>Counters that update separately</h1>
+    <MyButton/>
+    <MyButton/>
+    <MyButton/>
+  </div>
+```
+![alt text](./image_READMEver/buttonnumber.png)
+
+--- 
+
+### Hook 사용하기
+
+> Hook : use로 시작하는 함수
+  - useState는 React에서 제공하는 내장 Hook
+  - 다른 함수보다 더 제한적
+  - 자신만의 Hook을 작성 가능
+
+⚠️ compoent 혹은 상단에서만 Hook 호출 가능!!
+
+조건이나 반복에서 useState를 사용하고 싶다면 새 컴포넌트를 추출하여 넣어야한다.
+
+#### 사용 규칙
+
+__최상위에서만 호출__
+  - if, for, while 등의 블록 내부에서 Hooks 호출은 안됨.
+    <br>❓조건문 내부에서 호출하면 실행 순서가 달라질 수 있음.
+```js
+function MyCompo(){
+  if(someCondition){
+    useState(0); // ❌ 조건문 내부에서 사용 불가. 오류.
+  }
+}
+- - -
+function MyCompo(){
+  const [c, setC] = useState(0); // 항상 최상위 호출
+}
+```
+#### ❓왜 이런 제한을 거는가?
+- _rendering 순서를 보장하기 위해(동작을 예측 가능)_<br>
+조건문이나 반복문 안에서 Hooks를 사용하면 Hook의 호출 순서가 달라질 수 있기 때문. 상태를 제대로 추적 못함.
+- _불필요한 사이드 이펙트 방지(안정성)_<br>
+컴포넌트가 여러 번 rendering될 때마다 동일한 순서로 Hook이 실행되어야 의도한 동작을 수행 가능.
+
+#### finction형 컴포넌트에서만 Hook을 사용하는 이유
+1. Class형 component는 lifecycle 함수를 통해서 상태 관리함.
+2. Class형 component는 유지보수가 어렵고 복잡해질 수 있었음.
+3. lifecycle과 로직을 더 간결하게 만들기 위해 Hook을 도입<br>
+`따라서 React는 function형 component를 권장함.`
+<br>
+
+__⚠️Hook은 function형 component 전용으로 설계__
+
+#### fun형 컴포넌트 vs class 컴포넌트
+
+1. 초창기(2013년 5.29 ~ 2014년) : 
+    - 함수형 컴포넌트는 존재했지만 props를 받아 UI를 반환하는 역할만 가능. 그래서 __상태(state)나 생명주기(lifecycle) 기능이 없었다__
+2. (2019년 2월) => Hooks 도입
+    - Hook이 추가되면서 함수형 component에서도 상태 관리와 생명주기 기능을 구현함
+3. (2020년 10월) 이후 
+    - Hooks 사용이 표준화 됨.
+
+--- 
+
+### 컴포넌트 간에 데이터 공유
+
+❓ 왜 변수는 count 하나인데 버튼 3개의 데이터가 모두 다른 state를 갖는 걸까?
+```js
+function MyButton() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1); // 카운트 늘려주기
+  }
+
+  return (
+    <button onClick={handleClick}>
+      Clicked {count} times 
+    </button> // 카운트 표시
+  );
+}
+- - -
+  <div>
+    <h1>Counters that update separately</h1>
+    <MyButton/>
+    <MyButton/>
+    <MyButton/>
+  </div>
+```
+__각 컴포넌트가 독립적으로 작동하기 때문이다.__
+![alt text](./image_READMEver/독립.png)
+
+---
+
+#### ⚠️ 하지만 데이터를 공유하고 항상 함께 업데이트가 필요하다.
+
+__동일한 count를 표시하고 함께 업데이트__ 하려면 state를 개별 버튼에서 모든 버튼이 포함된 가장 가까운 component 안으로 이동해야함.<br>
+__이러한 방법을 props라고 한다.__
+
+> app.js
+```js
+
+import Dc from './data공유compo';
+import { useState } from 'react';
+
+export default function App() {
+  const [count, setCount] = useState(0); // state를 끌어 올림.
+  
+  function handleClick(){
+    setCount(count + 1);
+  } // 함수도 끌어올림.
+
+  return(
+      <div>
+        <h1>Counters that update separately</h1>
+
+        {/* 원래 적용해주듯 이렇게 적용해준다. */}
+        <Dc count={count} onClick={handleClick}/>
+        <Dc count={count} onClick={handleClick}/>
+        <Dc count={count} onClick={handleClick}/>
+      </div>
+   
+  )
+
+}
+```
+
+위에서 `App.js`를 수정한 것처럼 받아주는 Dc인 `datasharecompo.js`도 수정해야하는데 그 특징은 다음과 같다.
+
+> 가장 중요한 것은 `App.js`에 추가되어 있는 `count` 변수와 `handleClick()` 함수를 받아줄 매개변수를 만들어줘야한다.
+
+> datasharecompo.js
+```js
+export default function datacompo({count, onClick}) {
+  // props를 읽도록 매개변수를 추가해준다.
+      return(
+        // 똑같이 출력을 해준다.
+        <button onClick={onClick}>누른 횟수 : {count}</button>
+      )
+  }
+```
+
+✅ 이것이 `props` 방식이다.
+
+---
+
+또는 아래와 같이 표현할 수도 있다.
+자식 컴포넌트를 부모 컴포넌트에 그냥 써버린다.
+
+> App.js
+```js
+import { useState } from 'react';
+
+// 자식 컴포넌트를 부모 컴포넌트에 바로 씀.
+function MyButton({ count, onClick }) {
+  return (
+    <button onClick={onClick}>
+      Clicked {count} times
+    </button>
+  );
+}
+
+export default function MyApp() {
+  const [count, setCount] = useState(0); // 변수 지정.
+
+  function handleClick() { // 함수 지정.
+    setCount(count + 1); 
+  }
+
+  return (
+    <div>
+      <h1>Counters that update together</h1>
+      {/* 호출 */}
+      <MyButton count={count} onClick={handleClick} />
+      <MyButton count={count} onClick={handleClick} />
+    </div>
+  );
+}
+
+```
+#### 📝 요약
+부모 컴포넌트에 자식 컴포넌트를 적고 부모 컴포넌트 안에 변수와 함수를 적거나, 따로 있다면 매개변수로 리턴을 해주기만 한다.
+
+
+
+
+
 ## 2025.03.27(4주차)
 
 ### component 생성 및 중첩
@@ -116,13 +363,19 @@ import { Button,Button2 } from './ButtonLib'; // named export로써 필요한것
     )
   }
   ```
-#### 스타일
+#### 스타일(style)
 
 - className으로 CSS클래스 지정. className은 HTML의 class 속성과 동일.
-```<img className="a"/>```
+```
+<img className="a"/>
+```
 - CSS파일을 추가하는 방법을 규정하진 않음.
-- HTML에 ```<link>``` 태그로 연결시켜주는 방법은 추천하지 않는다
+- HTML에 `<link>` 태그로 연결시켜주는 방법은 추천하지 않는다
 (WHY? 정적 페이지를 수정해야 하기 때문에.)
+```js
+<div style={{textAlign: 'center'}}></div>
+```
+직접 하려면 이런 식으로 한다.
 
 ---
 ### 데이터 표시
