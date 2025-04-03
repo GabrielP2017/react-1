@@ -38,7 +38,11 @@ export default function App() {
       </div>
 
       <div>
-        <h1>Counters that update separately</h1>
+        <h1>Updating the screen</h1>
+        <MyB/>
+        <MyB/>
+        <MyB/>
+        <h1>component shaping</h1>
         <Dc count={count} onClick={handleClick}/>
         <Dc count={count} onClick={handleClick}/>
         <Dc count={count} onClick={handleClick}/>
