@@ -111,6 +111,79 @@ export default function Board() {
 - ❓배열인 이유 : 9개를 전부 선언해야 하니까
 - ❓fill() : 배열의 요소를 특정 값으로 채울 때 사용되는 함수
 
+이제 Board 컴포넌트는 렌더링하는 각 Square 컴포넌트에 value prop를 전달.
+```js
+<Square value={squares[0]} />
+```
+다음으로 보드 컴포넌트에서 각 value prop를 받을 수 있도록 Square 컴포넌트를 수정
+```js
+function Square({value}) {
+  return <button className="square">{value}</button>;
+}
+```
+
+- 이제 각 사각형은 'X' , 'O' , 또는 빈 사각형의 경우 null이 되는 value prop를 받는다.
+
+✨목표 : Square가 클릭 되었을 때 발생하는 동작을 변경
+
+- Board 컴포넌트에서 Square 컴포넌트로 함수를 전달 하여 Square가 클릭될 때마다 해당 함수를 호출하게 해야한다.
+
+> Square 컴포넌트가 클릭 될 때 호출할 함수 `handleClick()`
+```js
+export default function Square({value, onSquareClick}) {
+    return (
+      <div>
+          <button className="square"
+          onClick={onSquareClick}>{value}</button>
+      </div>
+    );
+  
+  }
+
+```
+> 이제 `onSquareClick` prop을 Board 컴포넌트의 `handleClick` 함수와 연결
+```js
+export default function Board() {
+
+  const [ squares, setSquares ] = useState(Array(9).fill(null));
+
+  return(
+    <>
+      <div className="board-row">
+        <Square value={ squares[0] } onSquareClick={handleClick} /> {/* 이 부분이 변경됨. */}
+    // ...
+    );
+}
+```
+> 마지막으로 컴포넌트 내부에 `handleClick` 함수를 정의하여 `squares` 배열을 업데이트
+```js
+//...
+  function handleClick() {
+    const nextSquares = squares.slice();
+    nextSquares[0] = "X";
+    setSquares(nextSquares);
+  }
+//...
+```
+- `slice()`: [배열||문자열]에서 원하는 부분을 잘라내어 새로운 [배열||문자열]을 만드는 데 사용
+
+이러면 `handleClick` 함수는 `nextSquares` 배열의 첫 번째 사각형(인덱스 [0])에 X를 추가하여 업데이트 한다.
+
+
+
+
+### 컴포넌트 분리하기
+
+문서에는 Board가 export default로 선언되어 있어 컴포넌트를 분리한다.
+
+> 분리 순서
+1. 컴포넌트 이름과 동일한 파일 만들기
+2. 해당 파일을 복사하고 export default 키워드 추가
+3. 필요한 컴포넌트와 useState 추가
+4. App.js에서 해당 코드 삭제및 import
+5. useState import 제거
+
+
 ---
 
 ## 2025.04.03(5주차)
