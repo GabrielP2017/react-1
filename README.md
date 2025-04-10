@@ -1,5 +1,118 @@
 # 202030222 이강민
 
+## 2025.04.10(6주차)
+
+### props를 통해 데이터 전달하기
+
+재사용 할 수 있는 컴포넌트를 만들어서 지저분하고 중복된 코드를 삭제함.
+
+1. Board component를 만들고 Square component의 내용을 복사한다.
+
+2. Square component의 button 하나만 남기고 다 삭제한다.
+
+3. Board component의 button을 Square component로 교체함.
+
+4. App에서 호출하는 걸 Square에서 Board로 바꿔줌.
+
+이렇게 컴포넌트를 정리하면 깔끔하지만, 숫자 출력이 1만 나옴
+
+✅해결 : props를 사용하여 각 사각형이 가져야 할 값을 부모 컴포넌트(Board)에서 자식 컴포넌트(Square)로 전달.
+
+__주의__ : 컴포넌트를 __호출__ 하는 쪽이 부모 컴포넌트임.
+
+
+- 매개변수쪽을 value prop을 전달 받을 수 있도록 수정.
+```js
+function Square({value}) {
+  return <button className="square">1</button>;
+}
+```
+
+- 위처럼 해도 return은 1이니 1도 `{value}`로 바꿔준다.
+```js
+function Square({value}) {
+  return <button className="square">{value}</button>;
+}
+```
+
+❓: 하지만 Board로 부터 value prop이 전달되지 않아서 하얀 화면일 것.<br>
+![alt text](./image_READMEver/notbord.png)
+
+### 사용자와 상호작용하는 컴포넌트 만들기
+
+✨목표 : Square 컴포넌트를 클릭하면 X로 채워지게 수정하기!!
+
+1. Square 내부에 handleClick 함수 선언.
+
+2. `console.log('clicked');` 선언.
+
+3. return 내부의 button에 `onClick={handleClick}` 선언.
+
+= 이제 버튼이 동작한다.
+
+1. useState를 import 하여 클릭된걸 기억시켜 X를 표시하게 만들기.
+
+2. Square에서 `{value}`를 지우고 useState를 사용.
+
+3. 컴포넌트의 시작 부분에 useState를 호출 -> value라는 이름의 state변수를 반환시킨다.
+
+```js
+import { useState } from 'react';
+
+function Square() {
+  const [value, setValue] = useState(null);
+
+  function handleClick() {
+    //...
+```
+> value는 값을 저장하는 변수, setValue는 값을 변경하는 데 사용하는 함수.<br>
+> useState에 전달된 null은 state 변수의 초깃값으로 사용되므로 현재 value는 null
+
+클릭 되었을 때 X로 변환하기 위해 `console.log("clicked!");`을 `setValue('X');`로 변경.
+
+✅이제 버튼을 클릭하면 `'X'`가 생성된다.
+- 각각의 Squares는 고유한 state가 있으며 독립적. 
+- 컴포넌트에서 set 함수를 호출하면 React는 그 안에 있는 자식 컴포넌트도 자동으로 업데이트
+
+### state 끌어올리기
+
+`부모 -> 자식` 이 원래 맞는건데 `자식 -> 부모`로 끌어올려주는 호출.
+
+- Square 컴포넌트는 게임 state의 일부를 유지합니다.
+ 틱택토 게임에서 승자를 확인하려면 Board가 9개의 Square 컴포넌트 각각의 state를 어떻게든 알고 있어야 한다.
+
+ > 접근
+ - Square에 state를 "요청" 해야 한다고 생각해보자. = 기술적으론 가능하지만 코드가 이해하기 어렵고 버그에 취약하다.
+
+ ✅가장 좋은 방법은 state를 각 Square가 아닌 **부모 컴포넌트**인 Board에 저장.
+ 각 Square에 숫자를 전달했을 때와 같이 prop를 전달.
+
+> 해결 방법
+
+ 두개의 자식 컴포넌트가 서로 통신하려면 = 부모 컴포넌트에서 __공유 state를 선언__ 해야 함.
+
+ props를 통해 해당 state를 자식 컴포넌트에 전달 가능.
+ 이렇게 하면 자식 컴포넌트가 서로 동기화 -> 부모 컴포넌트 동기화
+
+ > 실천
+
+- 9개의 null의 **배열**을 기본값으로 하는 state 변수 squares를 선언.
+
+```js
+// ...
+export default function Board() {
+  const [squares, setSquares] = useState(Array(9).fill(null));
+  return (
+    // ...
+  );
+}
+```
+`Array(9).fill(null)`
+- ❓배열인 이유 : 9개를 전부 선언해야 하니까
+- ❓fill() : 배열의 요소를 특정 값으로 채울 때 사용되는 함수
+
+---
+
 ## 2025.04.03(5주차)
 
 ### 이벤트에 응답하기
