@@ -230,6 +230,37 @@ function calculateWinner(squares) {
 > 원리 : squares[a]랑 [b],[c]를 계속 비교하는데, 그 이유는 
 반환된 squares[a]가 [b] || [c]와 같다면 b,c 배열에 넣어주는 것이다.
 
+calculateWinner(squares)를 호출하여 플레이어가 이겼는지 확인하기.
+
+참이면 retrun시켜 즉시 종료시킨다.
+```js
+function handleClick(i) {
+  if (squares[i] || calculateWinner(squares)) {
+    return;
+  }
+//....
+```
+
+이제 플레이어에게 누가 이겼는지, 다음이 누가 플레이어인지 알려주는 코드를 작성한다.
+` 이 코드는 handleClick() 함수 바깥에다가 해줘야한다!! `
+```js
+export default function Board() {
+
+  let chat;
+  
+  if(calculateWinner(squares)){
+    chat = `winner:${calculateWinner(squares)} `
+  }else{
+    chat = `next player: ${ xisnext ? "X" : "O" }`;
+  }
+  //.....
+
+  return{
+        <>
+      <div className="chat">{chat}</div>
+  }
+```
+
 #### 구조 분해 할당
 
 배열이나 객체의 구조를 해체하여 내부 값을 개별 변수에 쉽게 할당하는 방법.
@@ -237,9 +268,10 @@ function calculateWinner(squares) {
 코드의 간결성과 가독성을 높일 수 있다.
 
 ```js
+
+// 전통 방식  
 const fruits = ['🍎', '🍌', '🍇'];
 
-// 전통 방식
 const first = fruits[0];
 const second = fruits[1];
 
@@ -252,6 +284,70 @@ console.log(grape);  // 🍇
 ```
 
 **한마디로** 객체의 값을 하나하나 꺼내 쓰는 것이다.
+
+---
+
+### 시간여행 추가하기
+
+시간을 거슬러 올라가는 기능 만들기.
+
+#### 플레이 히스토리 저장
+
+- squares 배열을 변형하면 시간 여행을 구현하기는 매우 어렵다.
+- slice()를 사용하여 플레이어가 클릭할 때마다 squares 배열의 새 복사본을 만들어 불변성을 유지했다.
+- 덕분에 모든 squares 배열의 모든 과거버전을 저장할 수 있다.
+- 과거의 squares 배열을 history라는 다른 배열에 저장하고 이 배열을 새로운 state 변수로 저장.
+- history 배열은 첫 번째 이동부터 마지막 이동까지 모든 보드 state를 나타내준다.
+
+history는 다음과 같은 모양을 같는다.
+```js
+[
+  // Before first move
+  [null, null, null, null, null, null, null, null, null],
+  // After first move
+  [null, null, null, null, 'X', null, null, null, null],
+  // After second move
+  [null, null, null, null, 'X', null, null, null, 'O'],
+  // ...
+]
+```
+
+#### 한 번 더 state 끌어올리기
+
+과거 이동 목록을 표시하기 위해 새로운 최상위 컴포넌트 Game을 작성하기.
+
+- 여기에 전체 게임 기록을 포함하는 history state를 배치
+
+- history state를 Game 컴포넌트에 배치하면 자식 Board 컴포넌트에서 squares state를 제거할 수 있다.
+
+- Square 컴포넌트에서 Board 컴포넌트로 state를 “끌어올렸던” 것처럼, 이제 Board 컴포넌트에서 **최상위 Game 컴포넌트로 state를 끌어올릴 수 있다.**
+
+이렇게 하면 Game 컴포넌트가 Board 컴포넌트의 데이터를 완전히 제어하고 Board의 history에서 이전 순서를 렌더링하도록 지시할 수 있다.
+
+> 방법
+
+```js
+export default function Game() {
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board />
+      </div>
+      <div className="game-info">
+        <ol>{/*TODO*/}</ol>
+      </div>
+    </div>
+  );
+}
+
+function Board() {
+  // ...
+}
+```
+1. index가 아니고 App에서 불러오기
+2. 최상위 컴포넌트이기에 맨 위에
+3. 컴포넌트와 파일이름은 일치시키기
+
 
 
 ## 2025.04.10(6주차)
@@ -435,7 +531,6 @@ export default function Board() {
 3. 필요한 컴포넌트와 useState 추가
 4. App.js에서 해당 코드 삭제및 import
 5. useState import 제거
-
 
 ---
 
@@ -835,11 +930,11 @@ import { Button,Button2 } from './ButtonLib'; // named export로써 필요한것
 직접 하려면 이런 식으로 한다.
 
 ---
-### 데이터 표시
+### 데이터 표시 = {}
 
 > JSX를 사용하면 JS에 마크업을 넣는다 = JS안의 마크업 안에 JS를 넣는다.
 - Escape Back : JS로 __탈출__ 하여변수나 표현식을 사용하는 것. 
-- {} 중괄호를 사용해서 표현식을 사용자에게 표시.
+- {} 중괄호를 사용해서 표현식을 사용자에게 표시. 한마디로 JS로 짠걸 {}로 나타낸다.
 ```jsx
 return(
   <>
