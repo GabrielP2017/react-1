@@ -1,5 +1,259 @@
 # 202030222 이강민
 
+## 2025.04.17(7주차)
+
+### state 끌어올리기
+
+#### 원리
+
+1. handleClick 함수는 JavaScript의 slice() 배열 메서드를 사용하여 squares 배열의 사본 nextSquares를 생성.
+
+2. handleClick 함수는 nextSquares 배열의 첫 번째 사각형(인덱스 [0])에 X를 추가하여 업데이트.
+
+3. setSquares 함수를 호출.
+squares의 state를 사용하는 컴포넌트(Board)와 그 하위 컴포넌트(보드를 구성하는 Square 컴포넌트)가 다시 렌더링
+
+💡중요!!!
+> JavaScript는 클로저를 지원하므로 내부 함수가(예: handleClick) 외부 함수(예: Board)에 정의된 변수 및 함수에 접근할 수 있다.
+handleClick 함수는 squares의 state를 읽고 setSquares 메서드를 호출할 수 있는데, 이 두 함수는 Board 함수 내부에 정의되어 있기 때문.
+
+❕결론 : 클로저 덕분에 handleClick 등 내부 함수가 Board 내의 squares 상태와 setSquares 함수에 자유롭게 접근한다.
+
+
+보드에 X를 추가할 수 있게 되었지만 가능한 건 오직 왼쪽 위 사각형뿐 이기에 모든 사각형을 업데이트할 수 있도록 handleClick 함수를 수정한다.
+
+```js
+  function handleClick() {
+    const nextSquares = squares.slice();
+    nextSquares[0] = "X";
+    setSquares(nextSquares);
+  }
+
+  // 위 코드를 아래 코드로 바꾼다.
+
+  function handleClick(i) {
+    const nextSquares = squares.slice();
+    nextSquares[i] = "X";
+    setSquares(nextSquares);
+  }
+
+```
+
+다음으로 인수 i를 handleClick에 전달해야 한다.
+
+❗하지만!!
+```jsx
+//Square의 onSquareClick prop를 아래와 같이 JSX에서 직접 handleClick(0)으로 설정할 수도 있지만 이 방법은 작동하지 않는다!!
+
+<Square value={squares[0]} onSquareClick={handleClick(0)} />
+```
+
+💡이유
+> 렌더 중 handleClick(0)을 직접 호출하면 setSquares가 상태를 바꿔 재렌더링되고, 그때 handleClick(0)도 다시 실행되어 무한 루프가 발생한다.
+
+```❌ Too many re-renders. React limits the number of renders to prevent an infinite loop.```
+
+
+이 문제를 해결하기 위해 
+handleClick(0)을 호출하는 handleFirstSquareClick 함수를 만들고, handleClick(1)을 호출하는 handleSecondSquareClick을 만들고… 계속해서 만들어야 하지만 9개의 서로 다른 함수를 정의하고 각각에 이름을 붙이는 것은 너무 장황하니 다음과 같이 수정한다.
+
+```js
+//...
+      <div className="board-row">
+        <Square value={ squares[0] } onSquareClick={handleClick} />
+{/* ... */}
+{/* 다음과 같이 작성한다. */}
+      <div className="board-row">
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+
+```
+화살표 함수로 짧게 정의하여 handleClick()함수를 호출하는데
+매개변수의 숫자들을 호출하여 함수 호출을 간단하게 구현한다.
+
+> 💡화살표 함수를 쓰는 이유 : 클릭 순간에만 함수를 호출하기 위해  화살표 함수를 쓰면 handleClick(0)을 호출하므로 원하는 i 값을 넘길 수 있다.
+
+#### 데이터 흐름 정리
+
+1. **Board → Square**  
+   *Board*가 `value`와 `onSquareClick`을 **props**로 내려줌 → Square가 화면을 올바르게 표시.
+2. **Square → Board**  
+   Square 클릭 → `onSquareClick` 실행 → Board의 `handleClick(i)` 호출 → **state 업데이트**.
+3. **Board (재)렌더링**  
+   `squares` state가 바뀌면 Board + 모든 Square가 자동으로 다시 렌더 → 화면 갱신.
+
+#### 왜 Board가 state를 갖고 있을가?
+
+- **한곳**에서 9개 칸의 값을 관리해야 **승자 계산**과 같은 로직을 쉽게 구현할 수 있음.
+- 자식이 여러 개라도 부모‑state가 변경되면 리액트가 **자동으로 필요한 부분만 다시 그려** 성능·일관성을 보장함.
+
+#### 💡중요!! : React 이벤트 핵심 정리
+이름들은 개발자가 원하는 이름을 넣어도 되지만, 관레상 이벤트를 나타내는 것들은 아래와 같이 이름을 지어준다.
+
+| 구분 | 역할 | 이름 규칙 |
+|------|------|-----------|
+| **DOM 요소의 이벤트** | `<button onClick={…} />`처럼 *빌트‑인* 요소에 부착되는 실제 브라우저 이벤트 | **고정** :  `onClick`, `onChange` 등 |
+| **사용자 정의 컴포넌트의 이벤트** | `<Square onSquareClick={…} />`처럼 개발자가 만든 컴포넌트에 전달하는 콜백 | **자유**지만 관례상 `onSomething` |
+| **이벤트 핸들러 함수** | 컴포넌트 내부에서 이벤트 발생 시 실행될 로직 구현 | **자유**지만 관례상 `handleSomething` |
+
+> 🔑 **요점**  
+> - 사용자 정의 컴포넌트에서는 어떤 이름을 써도 되지만, **`onX` / `handleX` 패턴**을 따르는 것이 가독성·일관성 면에서 좋다! 지키면서 쓰자!!
+
+---
+
+### 불변성
+
+.slice()를 호출하여 squares 배열의 사본을 생성하는 방법에 주목
+
+> 데이터를 변경하는 방법
+
+1. 직접 변경(가변)
+```js
+const squares = [null, null, null, null, null, null, null, null, null];
+squares[0] = 'X';
+// Now `squares` is ["X", null, null, null, null, null, null, null, null];
+```
+기존 배열을 직접 수정 → **원본 훼손**
+
+2. 복사 대체(불변)
+
+```js
+const squares = [null, null, null, null, null, null, null, null, null];
+const nextSquares = ['X', null, null, null, null, null, null, null, null];
+// Now `squares` is unchanged, but `nextSquares` first element is 'X' rather than `null`
+```
+배열 복사 → 복사본 수정 → 복사본으로 교체 → **원본 유지**
+
+#### 불변성의 장점
+
+1. 데이터를 직접 변경하지 않으면 복잡한 기능을 훨씬 쉽게 구현
+
+> 예시
+> 1. 특정한 작업을 실행 취소하고 다시 실행하는 기능을 구현
+> 2. 이전 버전의 데이터를 그대로 유지하여 나중에 재사용
+
+2. 렌더링 비용 절감 → 앱 성능 향상
+  - 부모의 state가 바뀌면 기본적으로 모든 자식이 다시 렌더링. → 변경 사항이 없는 자식 컴포넌트도 포함 됨.
+
+  - 변경 없는 자식까지 리렌더링되면 성능 저하 요인이므로 피하는게 좋음.
+
+---
+
+### 교대로 두기 : O 도 설치.
+
+“O”를 보드에 표시할 수 없다는 문제를 수정한다.
+
+X,O가 번갈아 한번씩 두어야 한다.
+- 방법 : X가 두었는지 아닌지 현재 상태를 보관한다.
+X의 차례면 true, O의 차례면 false
+
+```js
+function Board() {
+  const [xIsNext, setXIsNext] = useState(true);
+// X면 true상태여야하니 useState(true)
+```
+
+```js
+  function handleClick(i) {
+    const nextSquares = squares.slice();
+    if (xIsNext) {
+      nextSquares[i] = "X";
+    } else {
+      nextSquares[i] = "O";
+    }
+    setSquares(nextSquares);
+    setXIsNext(!xIsNext); // 현재 값을 반전시켜 토글 및 state로 업데이트.
+  }
+```
+이제 X,O가 번갈아 가면서 출력된다.
+
+❗하지만!! 같은 사각형을 여러번 누르면 X,O가 번갈아가면서 나오는 문제가 존재❗
+
+💡해결
+
+square가 이미 채워져 있는 경우. state를 업데이트 하기 전에 handleClick 함수에서 조기에 retrun하기
+```js
+  function handleClick(i) {
+    const nextSquares = squares.slice();
+    // 이미 값이 있다면 retrun해버려서 그냥 아래의 코드를 실행시키지 않게 한다. = 조기 종료.
+    if(squares[i]){
+      return;
+    }
+    //...
+```
+#### return의 의미
+
+`return 값이 없다 == 함수를 즉시 종료 하라는 의미`<br>
+return 값이 없으면 자동으로 undefined를 반환.<br>
+:: squares[i]가 값이 있다면 그냥 함수를 종료하라는 뜻.
+
+---
+
+### 승자 결정
+
+이제 승자가 결정되어 차례를 만들 필요가 없는 것도 만들기.
+
+> 방법
+
+- 도우미 함수 `calculateWinner`를 추가한다.  
+- `calculateWinner`는 9개의 칸(`squares`) 배열을 입력으로 받는다.  
+- 승자가 ‘X’이면 `'X'`, ‘O’이면 `'O'`를 반환.  
+- 승자가 없으면 `null`을 반환.  
+
+calculateWinner 이 함수는 React에서만 국한되는 함수가 아니다.
+`calculateWinner 함수를 Board의 앞에 정의하든 뒤에 정의 하든 상관이 없다.`
+
+- 승리할 수 있는 경우를 2차원 배열로 만들기.
+- line과 squares를 비교하기위한 for문 작성.
+- 비교를 위한 구조 분해 할당
+
+```js
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
+```
+> 원리 : squares[a]랑 [b],[c]를 계속 비교하는데, 그 이유는 
+반환된 squares[a]가 [b] || [c]와 같다면 b,c 배열에 넣어주는 것이다.
+
+#### 구조 분해 할당
+
+배열이나 객체의 구조를 해체하여 내부 값을 개별 변수에 쉽게 할당하는 방법.
+
+코드의 간결성과 가독성을 높일 수 있다.
+
+```js
+const fruits = ['🍎', '🍌', '🍇'];
+
+// 전통 방식
+const first = fruits[0];
+const second = fruits[1];
+
+// 구조 분해 할당
+const [apple, banana, grape] = fruits;
+
+console.log(apple);  // 🍎
+console.log(banana); // 🍌
+console.log(grape);  // 🍇
+```
+
+**한마디로** 객체의 값을 하나하나 꺼내 쓰는 것이다.
+
+
 ## 2025.04.10(6주차)
 
 ### props를 통해 데이터 전달하기
@@ -167,10 +421,9 @@ export default function Board() {
 ```
 - `slice()`: [배열||문자열]에서 원하는 부분을 잘라내어 새로운 [배열||문자열]을 만드는 데 사용
 
+💡slice를 쓰는 이유 : `squares`라는 배열을 그냥 복사해서 `nextSquares` 배열에다가 붙여넣는다.
+
 이러면 `handleClick` 함수는 `nextSquares` 배열의 첫 번째 사각형(인덱스 [0])에 X를 추가하여 업데이트 한다.
-
-
-
 
 ### 컴포넌트 분리하기
 
