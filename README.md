@@ -273,7 +273,7 @@ function jumpTo(nextmove) {
     setXIsnext(!xisnext);
   }
 ```
-`(0, Cmove + 1) : 0 ~ Cmove + 1 까지 전부 찾아준다. = 전부 포함 `<br>
+(0, Cmove + 1) : 0 ~ Cmove + 1 까지 전부 찾아준다. = 전부 포함<br>
 ❓만약 +1 이 없으면? : 0부터 Cmove 바로 전 까지만 가져온다.
 
 `[history.length - 1]`인 항상 마지막 동작을 렌더링하는 대신 `Cmove` 으로 현재 선택한 동작을 렌더링하도록 `Game` 컴포넌트를 수정.
@@ -286,8 +286,39 @@ export default function Game() {
 }
 ```
 
+### 최종 정리
 
+코드를 자세히 살펴보면 Cmove가 짝수일 때는 `xIsNext === true`가 되고, Cmove가 홀수일 때는 `xIsNext === false`가 되는 것을 알 수 있다.
 
+✅ Cmove의 값을 알고 있다면 언제나 xIsNext가 무엇인지 알아낼 수 있다.
+
+**따라서 이 2개의 state를 모두 저장할 이유가 없다.**
+
+```js
+export default function Game() {
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [Cmove, setMove] = useState(0);
+  const xIsNext = Cmove % 2 === 0; // 홀수면 X, 짝수면 O
+  const currentSquares = history[Cmove];
+
+  function handlePlay(nextSquares) {
+    const nextHistory = [...history.slice(0, Cmove + 1), nextSquares];
+    setHistory(nextHistory);
+    setMove(nextHistory.length - 1);
+    // 토글 지워짐.
+  }
+
+  function jumpTo(nextMove) {
+    setMove(nextMove);
+    // xIsNext가 대신해줌.
+  }
+  // ...
+}
+
+```
+더 이상 `xIsNext` state 선언이나 `setXIsNext` 호출이 필요하지 않다. 이제 컴포넌트를 코딩하는 동안 실수를 하더라도 `xIsNext`가 `Cmove`와 동기화되지 않을 가능성이 없다.
+
+**⚠️ 중복된 state는 에러를 불러온다! 중복시키지 말자!! ⚠️**
 
 ## 2025.04.17(7주차)
 
