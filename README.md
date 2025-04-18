@@ -1,5 +1,257 @@
 # 202030222 이강민
 
+## 2025.04.18(보강-9주차)
+
+### 한 번 더 state 끌어올리기
+
+Board()안에 있던 useState를 Game()안에 넣기.
+```js
+export default function Game(){
+    const [xIsNext, setXIsNext] = useState(true);
+    const [history, setHistory] = useState([Array(9).fill(null)]); // Board()가 메인 컴포넌트가 아니니까 [squares, setSquares]를 history로 바꿔준다.
+    // 게임의 진행 기록을 배열에 기억해 놓은걸 Game()으로 옮겨줌.
+}
+```
+⚠️ 2차원 배열로 만들어 줘야만 9칸의 배열을 순서대로 저장한다.
+
+현재 이동에 대한 사각형을 렌더링하려면 history에서 마지막 사각형의 배열을 읽어야 하기에,
+배열을 불러온다.
+```js
+export default function Game(){
+    const [xIsNext, setXIsNext] = useState(true);
+    const [history, setHistory] = useState([Array(9).fill(null)]);
+
+    const currentSquares = history[history.length - 1]; // 최근에 저장된 배열 가져오기. 마지막 배열을 가져와야하며 index는 0부터 시작하니 -1 해야함.
+}
+```
+
+Game 컴포넌트에 `handlePlay` 함수를 정의한 뒤, `xIsNext`, `currentSquares`, `handlePlay`를 `Board`에 props로 전달.
+```js
+export default function Game() {
+  const [xIsNext, setXIsNext] = useState(true);
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const currentSquares = history[history.length - 1];
+
+  function handlePlay(nextSquares) {
+    // 새로 추가.
+  }
+
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} /> {/* 함수를 보드로 전달. */}
+  )
+}
+```
+
+`Game()`에 `Board()`로 props를 전달했으니 Board()에도 props를 받도록 해야한다.
+
+```js
+export default function Game() {
+  return(
+    <>
+      <Board xisnext={xisnext} squares={currentSquares} onPlay={handlePlay}/>
+    </>
+  )
+  //...
+}
+
+// props를 전달해준다. {} 는 꼭 필수!!!
+// {}가 없으면 매개변수를 하나만 받는걸로 하여 오류가 난다.
+
+function Board({xisnext, squares, onPlay}) {
+//...
+}
+```
+
+`Board`함수 의 `handleClick`에서 `setSquares`와 `setXIsNext` 호출을 제거하고, 대신 단 하나의 `onPlay`만 호출 하도록 바꿔서 Game 컴포넌트가 보드 업데이트를 담당 하게 한다.
+```js
+function Board({xisnext, squares, onPlay}) {
+  //... 
+  function handleClick(i) {
+    const nextSquares = squares.slice();
+
+    if(squares[i] || calculateWinner(squares)){
+      return;
+    }
+
+    if(xisnext){
+      nextSquares[i] = "X";
+    }else{
+      nextSquares[i] = "O";
+    }
+    
+/*  setSquares(nextSquares);
+    setXIsnext(!xisnext); */
+
+    onPlay(nextSquares); // 이거 하나만 호출하여 Game()에 업데이트 기능을 담당시킨다.
+  }
+}
+```
+
+배열을 가져와서 mextSquares에다가 추가하여 기록한다.
+```js
+export default function Game() {
+  //...
+  function handlePlay(nextSquares) {
+    setHistory([...history, nextSquares]) // 옛날 기록을 가져와서 새 배열로 상태를 갱신한다.
+    // history 의 모든 항목 열거
+    setXIsnext(!xisnext); // 토글링. 턴 교체.
+  }
+}
+```
+**이렇게 하면 배열이 계속 갱신되며 그 배열들이 저장되어 최종적으로
+모든 게임의 행동이 배열에 저장된다.**
+
+---
+
+### 보드가 깨지는 이유
+
+- 일반적으로 하면 아래처럼 화면이 깨져보인다.<br>
+![이미지](./image_READMEver/Rowla.png)
+
+- React는 하나로 매핑을 해줘야하는데 다음과 같이 되어있다.
+
+>Square.jsx
+```js
+export default function Square({value, onSquareClick}) {
+
+    return (
+      <div>
+          <button className="square"
+          onClick={onSquareClick}>{value}</button>
+      </div>
+    );
+  
+  }
+```
+- div를 css를 안해주고 button만 스타일링 해줘서 다음 화면처럼 깨지게 보인다.
+그렇기에 `<button>` 만 남기거나 `<>...</>`만 남겨준다.
+
+---
+
+### 과거 움직임 보여주기 
+
+history에 게임의 과거 기록을 저장하므로 과거 이동 목록을 보여줄 수 있다.
+
+- `<button>`과 같은 React 엘리먼트는 일반 JS객체이므로 애플리케이션에서 전달.
+- 여러 엘리먼트를 렌더링하면 React 엘리먼트 배열을 사용함.
+- state에 이동 `history` 배열이 있기 때문에 이것을 React 엘리먼트 배열로 변환.
+
+- JS에선 한 배열을 다른 배열로 변환하려면 **배열 map 메서드**를 사용하면 된다.
+```js
+[1, 2, 3].map((x) => x * 2) // [2, 4, 6]로 변환.
+```
+> `map 함수의 사용`<br>
+> 각각의 history 요소에 대한 {}의 실행문 실행.<br>
+> 한마디로 각각의 배열의 길이만큼 for문을 돌리고 있는 것이다.
+
+
+Game 컴포넌트에서 모든 플레이를 저장한 `history` 배열을 `map`으로 순회해,
+각 이동마다 클릭 시 해당 턴으로 돌아가는 버튼 엘리먼트를 생성.
+```js
+export default function Game() {
+ //...
+  function jumpTo(nextmove) {
+    
+  }
+
+ // history를 순회하며 각 이동에 대한 버튼 생성.
+  const moves = history.map((square,move) =>{
+    let description;
+    if(move > 0){
+      description = `${move}로 이동.`;
+    }else{
+      description = `게임 시작.`;
+    }
+
+    return(
+      <li>
+        <button onClick={() => jumpTo(move)}>{description}</button>
+      </li>
+    )
+  })
+
+  return(
+    <div className='game' >
+      <div className='game-board'>
+        <Board xisnext={xisnext} squares={currentSquares} onPlay={handlePlay}/>
+      </div>
+      <div className='game-info'>
+        <ol>{moves}</ol> {/* 위에 선언한 moves변수를 보여줌.  */}
+      </div>
+    </div>
+  )
+
+}
+```
+
+❗하지만 이렇게 만들면 콘솔에 아래와 같은 오류가 나온다
+```diff
+- Each child in a list should have a unique "key" prop. Check the render method of `Game`.
+```
+✅ key props를 지정해 달라는 말이다.
+
+---
+
+### Key 선택하기
+
+React는 리스트를 렌더링할 때 각 항목을 추적해 두고,
+업데이트 시 항목의 추가·제거·순서 변경·수정 등 어떤 부분이 바뀌었는지 빠르게 확인한다.
+
+리스트가 다음과 같이 업데이트 되면
+
+```js
+<li>Alexa: 7 tasks left</li>
+<li>Ben: 5 tasks left</li>
+// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+<li>Ben: 9 tasks left</li>
+<li>Claudia: 8 tasks left</li>
+<li>Alexa: 5 tasks left</li>
+```
+`task`의 갯수가 업데이트 되고, `Alexa`와 `Ben`의 순서가 바뀌고 `Claudia`가 두 사람 사이에 추가되었다고 생각하게 된다.
+<br>
+⚠️그러나 React는 컴퓨터라서 우리가 의도한게 무엇인지 모른다.
+
+✅ 그러므로 리스트 항목에 `key` 프로퍼티를 지정하여 각 리스트 항목이 **다른 항목과 다르다**는걸 **구별**해야한다.
+
+| 제목         | 요약                                       |
+|------------|------------------------------------------|
+| `key`의 역할  | 리스트 항목을 구분하기 위한 내부 식별자 (컴포넌트 단위로만 고유) |
+| 동작 방식     | 엘리먼트 생성 시 key를 저장하고, 업데이트 시 변경된 항목 판별에 사용 |
+| 권장 사항     | 변하지 않는 고유 ID 사용. key 없으면 경고 후 인덱스 사용되며, 인덱스는 지양 |
+| 경고 제거하기 | `key={i}`로 경고는 사라지나, 인덱스 사용 문제 발생—해시 등 안정적 값 권장 |
+
+> 결론 : **key는 React의 list가 구별하기 위해 필요한 프로퍼티** 이다.
+
+만약 데이터베이스에서 데이터를 불러와 사용한다면 해당 list들의 ID를 key값으로 쓸 수도 있다.
+```js
+<li key={user.id}>
+  {user.name}: {user.taskCount} tasks left
+</li>
+```
+
+그렇기에 `Game()`에서 key를 추가할 수 있으며 추가하면 에러가 사라진다.
+```js
+const moves = history.map((squares, move) => {
+  //...
+  return (
+    <li key={move}> {/* key를 추가한다. */}
+      <button onClick={() => jumpTo(move)}>{description}</button>
+    </li>
+  );
+});
+
+```
+
+---
+
+### 시간여행 구현
+
+`key`를 통해 해당 기록의 `history` 배열의 기록된 데이터로 갈 수 있다.
+
+
+
 ## 2025.04.17(7주차)
 
 ### state 끌어올리기
