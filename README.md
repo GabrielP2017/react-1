@@ -231,7 +231,7 @@ React는 리스트를 렌더링할 때 각 항목을 추적해 두고,
 </li>
 ```
 
-그렇기에 `Game()`에서 key를 추가할 수 있으며 추가하면 에러가 사라진다.
+그렇기에 `Game()`에서 key를 추가할 수 있으며 추가하면 에러가 사라진다. 리스트에다가 key값을 추가해준다.
 ```js
 const moves = history.map((squares, move) => {
   //...
@@ -249,6 +249,43 @@ const moves = history.map((squares, move) => {
 ### 시간여행 구현
 
 `key`를 통해 해당 기록의 `history` 배열의 기록된 데이터로 갈 수 있다.
+
+시간여행을 구현하는 `jumpTo`를 만들기 전에 사용자가 현재 어떤 단계를 보고 있는지를 추적할 수 있는 `Game` 컴포넌트가 필요하다.
+이를 위해 기본값이 0인 `Cmove` 라는 새 state 변수를 정의한다.
+```js
+  const [ Cmove, setMove ] = useState(0);
+```
+
+그리고 `jumpTo`함수를 구현한다.
+```js
+function jumpTo(nextmove) {
+    setMove(nextmove);
+    setXIsnext(nextmove % 2 === 0); // 짝수면 X, 홀수면 O
+  }
+```
+
+`handlePlay`함수를 아래와 같이 변경한다.
+```js
+  function handlePlay(nextSquares) {
+    const nexthistory = [...history.slice(0, Cmove + 1), nextSquares] // history배열 전체가 아니라 현재 시점만 복사 후 nextSquares에 붙여 새로운 기록으로 만듬.
+    setHistory(nexthistory)
+    setMove(nexthistory.length - 1); // 현재 이동한 위치를 기록
+    setXIsnext(!xisnext);
+  }
+```
+`(0, Cmove + 1) : 0 ~ Cmove + 1 까지 전부 찾아준다. = 전부 포함 `<br>
+❓만약 +1 이 없으면? : 0부터 Cmove 바로 전 까지만 가져온다.
+
+`[history.length - 1]`인 항상 마지막 동작을 렌더링하는 대신 `Cmove` 으로 현재 선택한 동작을 렌더링하도록 `Game` 컴포넌트를 수정.
+```js
+export default function Game() {
+
+  const [ Cmove, setMove ] = useState(0);
+  const currentSquares = history[Cmove]; // 현재 이동한 위치의 상태를 가져옴.
+  //...
+}
+```
+
 
 
 
