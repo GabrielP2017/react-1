@@ -127,6 +127,51 @@ FilterableProductTable
 
 #### Step 3: 최소한의 데이터만 이용해서 완벽하게 UI State 표현
 
+UI를 상호작용(interactive)하게 만들려면 사용자가 기반 데이터 모델을 변경할 수 있게 해야 한다. **React**는 이를 위해 **state**를 제공
+
+1. State란 무엇인가? 🤔
+- **기억해야 하는, 변경할 수 있는 데이터**의 최소 집합
+- 앱이 동작하면서 변경되고, 화면에 반영되어야 하는 모든 데이터
+
+> State는 앱이 기억해야 하는 데이터의 최소 집합
+
+2. State 설계의 핵심 원칙
+
+**중복배제 원칙 (Don’t Repeat Yourself)**
+  - 필요한 **최소한의 state**만 정의
+  - 나머지 값들은 **다른 state**나 props를 통해 **실시간으로 계산**
+
+**예시(쇼핑리스트)**
+> 배열에 상품 아이템들을 넣는다.
+UI에 상풍 아이템의 개수를 노출하고 싶다면, 따로 state 값으로 가지는게 아니라 단순하게 배열의 길이만 쓰기.
+```js
+// 잘못된 예: count를 별도의 state로 정의 -> 중복
+const [items, setItems] = useState([]);
+const [count, setCount] = useState(0);
+
+// 올바른 예: items만 state로 관리, 개수는 items.length로 계산
+const [items, setItems] = useState([]);
+const count = items.length;
+```
+
+어떤 데이터가 State가 되어야 할까?
+
+애플리케이션 예시 데이터:
+1. **제품의 원본 목록**  
+2. **사용자가 입력한 검색어**  
+3. **체크박스의 값**  
+4. **필터링된 제품 목록**
+
+🔍 State 판단을 위한 질문
+
+1. **시간이 지나도 변하지 않나요?**  
+   - ✅ 변하지 않는다면 → **State 아님**  
+2. **부모로부터 props로 전달됩니까?**  
+   - ✅ props로 전달된다면 → **State 아님**  
+3. **다른 state나 props로부터 계산 가능한가요?**  
+   - ✅ 계산 가능하다면 → **State 아님**
+
+> 위 세 가지 모두 해당되지 않는 **나머지 데이터**가 **State**여야 한다!
 
 
 ## 2025.04.18(보강-9주차)
