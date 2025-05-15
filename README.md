@@ -128,7 +128,7 @@ function FilterableProductTable({ products }) {
   return (
     <div>
       <SearchBar filterText={filterText} inStockOnly={inStockOnly} onfilterTextchange={setFilterText} onisStockOnlychange={setInstockOnly} />
-      {/* //.... */}
+      {/* ... */}
 ```
 
 `SearchBar`에서 `onChange` 이벤트 핸들러를 추가하여 부모 state를 변경할 수 있도록 구현 한다.
@@ -167,7 +167,9 @@ function SearchBar({ filterText, inStockOnly, onfilterTextchange, onisStockOnlyc
 
 💡React로 “검색 가능한 상품 테이블”을 구축하는 과정을 단계별로 학습하기
 ( 컴포넌트의 조각들이 어떻게 APP으로 완성되는지 확인 하기 )
+
 ---
+
 ### 모의 시안과 함께 시작하기 
 
 이미 JSON API와 디자이너로부터 제공받은 모의 시안이 있다고 가정.
