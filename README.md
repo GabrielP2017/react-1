@@ -88,10 +88,68 @@ function FilterableProductTable({ products }) {
 ```
 
 이렇게 하면 폼이 수정되진 않지만 useState가 작동하는걸 확인할 수는 있다.
+그리고 콘솔을 보면 아래와 같은 오류가 나타난다.
+```diff
+- You provided a value prop to a form field without an onChange handler. This will render a read-only field. If the field should be mutable use defaultValue. Otherwise, set either onChange or readOnly.
+```
+이것은 아직 사용자의 키보드 입력과 같은 행동에 반응하는 코드를 작성하지 않았기 때문에 나타나는 것이다.
 
 ---
 
 #### Step 5: 역 데이터 흐름 추가
+
+이제 사용자 입력에 따라 state를 변경하려면 반대 방향의 데이터 흐름을 만들어야 한다.
+
+- **문제점**  
+  - `<input value={filterText}>`만 사용하면, 부모의 `filterText`가 변경되지 않아 입력이 무시.
+
+- **해결 방안**  
+  1. 부모 컴포넌트(`FilterableProductTable`)에  
+     - `setFilterText`  
+     - `setInStockOnly`  
+     함수를 정의.  
+
+  2. 이 함수들을 props로 자식 컴포넌트(`SearchBar`)에 전달한다.  
+
+  3. `SearchBar`에서  
+     - 텍스트 입력의 `onChange`  
+     - 체크박스 입력의 `onChange`  
+     이벤트 핸들러로 전달받은 함수를 호출하여 부모 state를 업데이트.
+
+- **결과**
+  - 단방향(props) 데이터 흐름에 더해, 콜백 함수를 통한 상향(state 변경) 흐름이 구현되어 사용자의 모든 입력이 UI에 즉시 반영.
+  - 단방향으로 하는 이유 : 양방향보다 오류가 나더라도 쉽게 확인할 수 있다.
+
+```jsx
+function FilterableProductTable({ products }) {
+  const [filterText, setFilterText] = useState('');
+  const [inStockOnly, setInstockOnly] = useState(false);
+
+  return (
+    <div>
+      <SearchBar filterText={filterText} inStockOnly={inStockOnly} onfilterTextchange={setFilterText} onisStockOnlychange={setInstockOnly} />
+      {/* //.... */}
+```
+
+`SearchBar`에서 `onChange` 이벤트 핸들러를 추가하여 부모 state를 변경할 수 있도록 구현 한다.
+
+```jsx
+function SearchBar({ filterText, inStockOnly, onfilterTextchange, onisStockOnlychange }) {
+  return (
+    <form>
+      <input
+        type="text"
+        value={filterText}
+        placeholder="Search..."
+        onChange={(e) => onfilterTextchange(e.target.value)} /* js 문법 */
+        /> 
+      <label>
+        <input
+          type="checkbox"
+          checked={inStockOnly} 
+          onChange={(e) => onisStockOnlychange(e.target.checked)} /* js 문법 */
+          />
+```
 
 ---
 ## 2025.05.08(10주차)
