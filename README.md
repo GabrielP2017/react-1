@@ -67,16 +67,16 @@ React는 항상 부모 → 자식으로 데이터를 전달하는 **단방향 �
 
 ```jsx
 function FilterableProductTable({ products }) {
-  const [filterText, setFilterText] = useState('');
-  const [inStockOnly, setInStockOnly] = useState(false);
+  const [filterText, setFilterText] = useState(''); // 검색 필터링
+  const [inStockOnly, setInstockOnly] = useState(false); // 재고가 있는지 필터링
   //...
 }
 ```
 그 후, `filterText`와 `inStockOnly`를 `ProductTable`와 `SearchBar`에게 props로 전달
 ```jsx
 function FilterableProductTable({ products }) {
-  const [filterText, setFilterText] = useState('');
-  const [inStockOnly, setInstockOnly] = useState(false);
+  const [filterText, setFilterText] = useState(''); // 검색 필터링
+  const [inStockOnly, setInstockOnly] = useState(false); // 재고가 있는지 필터링
 
   return (
     <div>
@@ -122,8 +122,8 @@ function FilterableProductTable({ products }) {
 
 ```jsx
 function FilterableProductTable({ products }) {
-  const [filterText, setFilterText] = useState('');
-  const [inStockOnly, setInstockOnly] = useState(false);
+  const [filterText, setFilterText] = useState(''); // 검색 필터링
+  const [inStockOnly, setInstockOnly] = useState(false); // 재고가 있는지 필터링
 
   return (
     <div>
