@@ -166,7 +166,7 @@ function SearchBar({ filterText, inStockOnly, onfilterTextchange, onisStockOnlyc
    - 컴포넌트 간에 Props나 Context를 통해 데이터가 유기적으로 전달되도록 설정.
 
 💡React로 “검색 가능한 상품 테이블”을 구축하는 과정을 단계별로 학습하기
-( 컴포넌트의 조각들이 어떻게 APP으로 완성되는지 확인 하기 )
+( 컴포넌트의 조각들이 어떻게 APP으로 완성되는지 확인 하기 )💡
 
 ---
 
@@ -218,18 +218,18 @@ JSON API는 아래와 같은 형태의 데이터를 반환
 
 ![표](./image_READMEver/s_thinking-in-react_ui_outline.png)
 
-1. **FilterableProductTable** (회색) : 전체 예시를 감싸는 최상위 컴포넌트  
-2. **SearchBar** (파란색) : 사용자의 텍스트 입력을 받아 필터 조건을 제공
-3. **ProductTable** (라벤더색) : 데이터 리스트를 렌더링하고, SearchBar의 입력에 따라 필터링 
-4. **ProductCategoryRow** (초록색) : 각 카테고리별 헤더(제목)
-5. **ProductRow** (노란색) : 개별 제품 정보를 한 행(row)으로 표시
+1. **FilterableProductTable** (회색, ⚪) : 전체 예시를 감싸는 최상위 컴포넌트  
+2. **SearchBar** (파란색, 🔵) : 사용자의 텍스트 입력을 받아 필터 조건을 제공
+3. **ProductTable** (라벤더색, 🟣) : 데이터 리스트를 렌더링하고, SearchBar의 입력에 따라 필터링 
+4. **ProductCategoryRow** (초록색, 🟢) : 각 카테고리별 헤더(제목)
+5. **ProductRow** (노란색, 🟡) : 개별 제품 정보를 한 행(row)으로 표시
 
 | 헤더 유형    | 조건 및 처리 방식 |
 |------------|--------------------------------------------------------------------|
 | 📝 단순 헤더   | “Name”과 “Price” 레이블만 있을 때<br>별도 컴포넌트 생성 없이 `ProductTable` 안에 직접 작성 |
 | ⚙️ 복잡 헤더   | 정렬 버튼, 필터 옵션 등 추가 기능이 필요할 때<br>`ProductTableHeader` 같은 독립 컴포넌트로 분리 |
 
-🌳 컴포넌트 계층 구조
+- 컴포넌트 계층 구조<br>
 한 컴포넌트 내에 있는 다른 컴포넌트는 게층 구조에서 자식으로 표현.
 ```
 FilterableProductTable
