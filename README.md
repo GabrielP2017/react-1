@@ -116,7 +116,9 @@ React 공식 빌더 : create-react-app(CRA).
 
 ---
 
-**Vite** : ✨추천✨
+##### 빌드 도구 종류
+
+### **Vite** : ✨추천✨
 
 Vite는 최신 웹 프로젝트를 위해 설계된 **고속 빌드 도구** 
 
@@ -134,9 +136,7 @@ npm create vite@latest my-app -- --template react
 5. **프레임워크 통합**
    - React Router, Next.js 등 주요 프레임워크의 기본 빌드 도구로 활용
 
----
-
-**Parcel**
+### **Parcel**
 ```
 npm install --save-dev parcel
 ```
@@ -149,9 +149,9 @@ npm install --save-dev parcel
 - **Flow** 타입 검사 지원  
 - **스타일링**(CSS, Sass 등) 기본 지원  
 
----
+-----------------------------------------------------
 
-**Rsbuild**
+### **Rsbuild**
 ```
 npx create-rsbuild --template react
 ```
@@ -164,6 +164,10 @@ npx create-rsbuild --template react
 - **빠른 새로고침**  
 - **JSX** 및 **TypeScript** 지원  
 - **스타일링**(CSS, Sass 등) 기본 지원  
+
+
+
+
 
 ## 2025.05.15(11주차)
 
