@@ -16,11 +16,15 @@ React는 **점진적 적용**이 가능하도록 설계.
 - **풀스케일 앱 시작하기**  
   - 처음부터 React 기반의 복잡한 애플리케이션을 구축하고자 할 때
 
+---
+
 #### React 시도하기
 
 local에서 react를 사용하고 싶다면 Node.js 설치.
 
 React 문서 외에도 [CodeSandbox](https://codesandbox.io), [StackBlitz](https://stackblitz.com/), [CodePen](https://codepen.io/) 등의 온라인 샌드박스에서도 React 지원
+
+---
 
 #### 새로운 React 앱 만들기
 
@@ -58,6 +62,8 @@ React로 새 앱이나 웹사이트를 만들 때는 **프레임워크 활용**�
 
 > 💡 필요에 따라 “경로별 서버 렌더링”만 추가하면 된다! 
 
+---
+
 #### 프레임워크 종류
 
 | 프레임워크                     | 주요 특징                                                                                                                                                                  |
@@ -81,6 +87,8 @@ React로 새 앱이나 웹사이트를 만들 때는 **프레임워크 활용**�
 - 풀스택 웹 앱을 쉽게 만들도록 **사전 탑재된 패키지 & 설정** 제공  
 - **빠른 스타트업**과 일관된 개발 경험에 최적화  
 
+---
+
 #### 프레임워크 자체 제작
 
 🔍 기존 프레임 워크를 사용하지 않고 직접 하는게 좋을 경우
@@ -93,6 +101,8 @@ React로 새 앱이나 웹사이트를 만들 때는 **프레임워크 활용**�
 - **더 많은 유연성** 확보 가능  
     - ⚠️하지만 **라우팅**, **데이터 가져오기**, 기타 **일반적인 패턴**에 사용할 도구를 직접 선택해야 한다.
 - 이미 존재하는 프레임워크 대신 **자체 구조**를 설계하는 것과 비슷
+
+---
 
 #### 1단계: 빌드 도구 설치
 
@@ -154,10 +164,6 @@ npx create-rsbuild --template react
 - **빠른 새로고침**  
 - **JSX** 및 **TypeScript** 지원  
 - **스타일링**(CSS, Sass 등) 기본 지원  
-
-
-
----
 
 ## 2025.05.15(11주차)
 
@@ -310,7 +316,6 @@ function SearchBar({ filterText, inStockOnly, onfilterTextchange, onisStockOnlyc
           />
 ```
 
----
 ## 2025.05.08(10주차)
 
 ### React로 사고하기
@@ -437,6 +442,8 @@ FilterableProductTable
 - 재사용 가능한 컴포넌트 라이브러리를 확보함
 - 현재 정적 버전이기에 컴포넌트는 JSX만 반환
 - 최상위 `FilterableProductTable` 컴포넌트가 prop으로 데이터 모델을 받아 데이터는 부모에서 자식으로만 전달되는 `단방향 데이터 흐름`구조를 가짐
+
+---
 
 #### Step 3: 최소한의 데이터만 이용해서 완벽하게 UI State 표현
 
@@ -878,6 +885,8 @@ handleClick(0)을 호출하는 handleFirstSquareClick 함수를 만들고, handl
 
 > 💡화살표 함수를 쓰는 이유 : 클릭 순간에만 함수를 호출하기 위해  화살표 함수를 쓰면 handleClick(0)을 호출하므로 원하는 i 값을 넘길 수 있다.
 
+---
+
 #### 데이터 흐름 정리
 
 1. **Board → Square**  
@@ -887,10 +896,14 @@ handleClick(0)을 호출하는 handleFirstSquareClick 함수를 만들고, handl
 3. **Board (재)렌더링**  
    `squares` state가 바뀌면 Board + 모든 Square가 자동으로 다시 렌더 → 화면 갱신.
 
+---
+
 #### 왜 Board가 state를 갖고 있을가?
 
 - **한곳**에서 9개 칸의 값을 관리해야 **승자 계산**과 같은 로직을 쉽게 구현할 수 있음.
 - 자식이 여러 개라도 부모‑state가 변경되면 리액트가 **자동으로 필요한 부분만 다시 그려** 성능·일관성을 보장함.
+
+---
 
 #### 💡중요!! : React 이벤트 핵심 정리
 이름들은 개발자가 원하는 이름을 넣어도 되지만, 관레상 이벤트를 나타내는 것들은 아래와 같이 이름을 지어준다.
@@ -928,6 +941,8 @@ const nextSquares = ['X', null, null, null, null, null, null, null, null];
 // Now `squares` is unchanged, but `nextSquares` first element is 'X' rather than `null`
 ```
 배열 복사 → 복사본 수정 → 복사본으로 교체 → **원본 유지**
+
+---
 
 #### 불변성의 장점
 
@@ -986,6 +1001,9 @@ square가 이미 채워져 있는 경우. state를 업데이트 하기 전에 ha
     }
     //...
 ```
+
+---
+
 #### return의 의미
 
 `return 값이 없다 == 함수를 즉시 종료 하라는 의미`<br>
@@ -1067,6 +1085,8 @@ export default function Board() {
   }
 ```
 
+---
+
 #### 구조 분해 할당
 
 배열이나 객체의 구조를 해체하여 내부 값을 개별 변수에 쉽게 할당하는 방법.
@@ -1097,6 +1117,8 @@ console.log(grape);  // 🍇
 
 시간을 거슬러 올라가는 기능 만들기.
 
+---
+
 #### 플레이 히스토리 저장
 
 - squares 배열을 변형하면 시간 여행을 구현하기는 매우 어렵다.
@@ -1117,6 +1139,8 @@ history는 다음과 같은 모양을 같는다.
   // ...
 ]
 ```
+
+---
 
 #### 한 번 더 state 끌어올리기
 
@@ -1419,6 +1443,8 @@ __각 버튼이 고유한 `count` state를 “기억”하고 다른 버튼에 �
 
 조건이나 반복에서 useState를 사용하고 싶다면 새 컴포넌트를 추출하여 넣어야한다.
 
+---
+
 #### 사용 규칙
 
 __최상위에서만 호출__
@@ -1435,11 +1461,16 @@ function MyCompo(){
   const [c, setC] = useState(0); // 항상 최상위 호출
 }
 ```
+
+---
+
 #### ❓왜 이런 제한을 거는가?
 - _rendering 순서를 보장하기 위해(동작을 예측 가능)_<br>
 조건문이나 반복문 안에서 Hooks를 사용하면 Hook의 호출 순서가 달라질 수 있기 때문. 상태를 제대로 추적 못함.
 - _불필요한 사이드 이펙트 방지(안정성)_<br>
 컴포넌트가 여러 번 rendering될 때마다 동일한 순서로 Hook이 실행되어야 의도한 동작을 수행 가능.
+
+---
 
 #### finction형 컴포넌트에서만 Hook을 사용하는 이유
 1. Class형 component는 lifecycle 함수를 통해서 상태 관리함.
@@ -1449,6 +1480,8 @@ function MyCompo(){
 <br>
 
 __⚠️Hook은 function형 component 전용으로 설계__
+
+---
 
 #### fun형 컴포넌트 vs class 컴포넌트
 
@@ -1577,7 +1610,7 @@ export default function MyApp() {
 }
 
 ```
-#### 📝 요약
+> 📝 요약
 부모 컴포넌트에 자식 컴포넌트를 적고 부모 컴포넌트 안에 변수와 함수를 적거나, 따로 있다면 매개변수로 리턴을 해주기만 한다.
 
 ---
@@ -1629,6 +1662,8 @@ function MyApp(){
 export default MyApp;
 ```
 
+---
+
 #### export default = 기본 컴포넌트 지정
 
 __[ export default와 export의 차이 ]__
@@ -1638,6 +1673,8 @@ __[ export default와 export의 차이 ]__
 - __export default__
   - 하나의 파일 안에서 하나의 컴포넌트만 내보내는 경우
   - 사용하는 쪽에서는 어떤 이름을 사용하든 상관 없음. ( 예시 : ```import ccc from "./calculator"```)
+
+---
 
 #### export default 예시
 
@@ -1667,6 +1704,8 @@ export default function App() {
 
 }
 ```
+
+---
 
 #### (Named)export 예시
 
@@ -1717,7 +1756,10 @@ import { Button,Button2 } from './ButtonLib'; // named export로써 필요한것
       </>
     )
   }
-  ```
+```
+
+---
+
 #### 스타일(style)
 
 - className으로 CSS클래스 지정. className은 HTML의 class 속성과 동일.
@@ -1801,6 +1843,8 @@ let isLoggedin = true;
   {isLoggedin || (<Loginform/>)}
 </div>
 ```
+
+---
 
 #### 리스트(목록 랜더링)
 
@@ -1917,7 +1961,8 @@ $ npm install // 다시 재설치
     - 최신버전의 패키지를 다시 받고 싶을 때
     - 다른 팀원이 이상한 상태로 업데이트했을 때
 
-#### ⚠️이렇듯 의존성 충돌, 패키지 문제가 생기면 삭제 후 재설치가 좋다.
+> ⚠️이렇듯 의존성 충돌, 패키지 문제가 생기면 삭제 후 재설치가 좋다.
+
 ---
 
 ### React의 핵심 요소. component
@@ -2045,6 +2090,9 @@ __웹의 본질__
 - 웹은 빠르게 로드되길 기대한다.
 - React를 사용하면 서버에서 데이터를 가져오는 동안(= 로딩) HTML을 먼저 스트리밍해 먼저 보여줘 JS코드가 로드되기 전에 콘텐츠를 잠진적으로 채움.
 - 클라이언트 측은 표준 웹 API를 사용해서, 렌더링 도중에도 UI를 반응하도록 함.
+
+---
+
 #### 결론 : 빠른 랜더링을 도와줌.
 
 __진정한 네이티브 UX 구현__
