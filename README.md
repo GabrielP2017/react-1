@@ -43,7 +43,7 @@
 
 ---
 
-### 기존 프로젝트에 React 추가하기
+## 기존 프로젝트에 React 추가하기
 
 [인터랙티브 기능](. "사용자와 시스템간의 상호 작용을 가능하게 하는 기능")을 추가하고 싶다고 react로 프로젝트를 다시 작성할 필요는 없다.
 기존 스택에 React를 추가하면 된다.
@@ -54,23 +54,70 @@
 
 1. **React 기반 프레임워크 선택 및 빌드**  
    - React를 위한 프레임워크 중 하나(Next.js, Gatsby 등)을/를 골라 앱의 React 부분을 빌드
-      - 💡 프레임워크의 기본 제공 빌드 파이프라인을 활용해 생산성 및 성능 최적화가 가능.
 
 2. **Base Path 지정**  
-   - 선택한 프레임워크 설정에서 `/some-app`을 “기본 경로(Base Path)”로 명시.
-      - 💡 이렇게 하면 빌드된 자산들이 올바른 하위 경로에 배치되며 라우팅 충돌을 방지할 수 있다.
+   - 선택한 프레임워크 설정에서 `/some-app`을 “기본 경로(Base Path)”로 명시.( Base Path 사용법 : [Next.js](https://nextjs.org/docs/app/api-reference/config/next-config-js/basePath), [Gatsby](https://www.gatsbyjs.com/docs/how-to/previews-deploys-hosting/path-prefix/))
 
 3. **서버 또는 프록시 구성**  
    - 기존 서버(Rails 등) 또는 리버스 프록시(Nginx, Apache 등) 설정을 통해 `/some-app/` 경로로 들어오는 모든 요청을 React 앱으로 포워딩
 
-> 서버 실행 환경에 따른 추가 고려사항 ⚙️
+```diff
++ 💡 React 기반의 프레임워크들은 대부분 **풀스택**이며 앱이 서버를 활용할 수 있도록 해준다.
+```
 
-- **서버 측 자바스크립트 실행 가능할 때**  
-  - Next.js, Gatsby 같은 풀스택 프레임워크의 SSR(Server-Side Rendering) 기능을 활용해 초기 로드 속도와 SEO를 극대화
+  > 서버 실행 환경에 따른 추가 고려사항 ⚙️
 
 - **서버에서 JS 실행 불가능하거나 원치 않을 때**
   - Next.js의 `next export`, Gatsby의 기본 정적 내보내기 기능을 사용하여 HTML/CSS/JS 형태로 내보낸 결과물을 `/some-app/`경로에 제공.
 
+### 기존 페이지의 일부분에 React 사용하기 
+
+이미 다른 기술(Rails, Backbone 등)으로 구축된 페이지에 React 컴포넌트를 삽입해 상호작용 기능을 추가하는 방법.
+
+1. **자바스크립트 환경 설정**  
+    1. JSX 구문이 동작하도록 빌드 도구(Babel, Webpack 등)를 설정
+    2. ES 모듈(`import`/`export`) 방식을 도입해 코드를 모듈로 분리 
+    3. npm 패키지 레지스트리(React 등) 설치.
+
+2. **컴포넌트 렌더링**  
+   - 기존 페이지 내 원하는 위치(예: 특정 DOM 엘리먼트)에 React 컴포넌트를 마운트
+
+> 세부 고려사항 🔍
+
+---
+
+#### 1단계: 모듈 자바스크립트 환경 설정하기
+
+-모듈 자바스크립트 환경을 구축하면 React 컴포넌트를 각각 개별 파일로 작성할 수 있다.
+- React 자체를 포함한 다양한 npm 패키지를 활용할 수 있다.
+
+> 작업을 수행하는 방법 ⚙️
+
+**애플리케이션이 이미 `import` 문으로 파일을 분리하고 있을 때**
+   - 기존 빌드 파이프라인을 그대로 사용하기.
+   - JSX 문법(`<div />` 등)을 작성해 보고 문법 오류가 나는지 확인.
+   - JSX 관련 문법 오류가 발생한다면, Babel을 이용한 코드 변환 필요하다. => JSX 사용을 위해 **Babel React 프리셋**을 활성화 하기.
+
+**자바스크립트 모듈을 컴파일하기 위한 기존 설정이 없을 떄**
+  - Vite를 이용하여 설정.
+  - Vite는 Rails, Django, Laravel 등의 백엔드와 공식 통합을 지원
+  - 목록에 없는 백엔드라면, Vite 가이드를 참고해 수동으로 빌드 출력을 통합.
+
+설정이 제대로 동작하는지 확인하려면 프로젝트 폴더에서 아래 명령어를 실행
+```
+npm install react react-dom
+```
+그리고 메인 자바스크립트 파일(index.js 혹은 main.js 같은 것)의 최상단에 다음 코드 라인을 추가
+```jsx
+import { createRoot } from 'react-dom/client';
+
+// 기존 HTML 컨텐츠를 지웁니다.
+document.body.innerHTML = '<div id="app"></div>';
+
+// 대신에 여러분이 작성한 React 컴포넌트를 렌더링합니다.
+const root = createRoot(document.getElementById('app'));
+root.render(<h1>Hello, world</h1>);
+```
 
 
 ## 2025.05.22(12주차)
