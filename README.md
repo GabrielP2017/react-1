@@ -119,6 +119,9 @@ const root = createRoot(document.getElementById('app'));
 root.render(<h1>Hello, world</h1>);
 ```
 
+⚠️ 처음으로 기존 프로젝트에 모듈 자바스크립트 환경을 통합하기는 다소 어려워 보일 수 있으니 어려움을 겪는 부분이 있다면 [커뮤니티 리소스](https://ko.react.dev/community)나 [Vite 채팅](https://discord.com/invite/aYVNktYeEB)을 이용할 것.
+
+
 
 ## 2025.05.22(12주차)
 
