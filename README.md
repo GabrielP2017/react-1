@@ -285,6 +285,52 @@ GitHub Pages를 운영하려면 **GitHub Pages 저장소**를 생성.
 
 ### 배포할 프로젝트 저장소 생성
 
+아래는 슬라이드 내용을 Markdown 형식으로 정리한 예시입니다.
+
+1. **로컬에 프로젝트 생성 및 준비**
+
+   * 작업할 디렉터리(Working directory)에 새 프로젝트를 생성
+
+2. **GitHub에 프로젝트 푸시**
+
+   * 로컬에서 변경사항(commit) 후 원격 저장소(GitHub)에 push한다.
+   * ※ 이때 GitHub 저장소(Repository)는 **public** 으로 설정해야 한다.
+
+3. **GitHub Pages 활성화**
+
+   1. GitHub 웹사이트에서 해당 저장소로 이동한 뒤,
+   2. 우측 상단의 **Settings** 탭을 클릭한다.
+   3. 왼쪽 메뉴에서 **Pages**(혹은 `Settings > Pages`) 항목을 찾는다.
+   4. Pages 설정 화면 중 “Build and deployment” 섹션에서
+
+      * **Source** 를 “Deploy from a branch” 로 선택하고,
+      * **Branch** 옵션에서 `main`(또는 `master`) 브랜치를 선택한 뒤
+      * **Save** 버튼을 눌러 저장한다.
+   > **Tip:**
+   > 초기에는 “None” 으로 되어 있을 수 있으므로, 클릭 후 `main`(또는 `master`)을 지정해야 Pages가 활성화된다.
+
+   ![](./image_READMEver/프로젝트배포.png)
+
+4. **배포 결과 확인**
+
+   * 설정을 저장한 뒤 1\~2분 정도 기다리면,
+   * 브라우저에 다음 URL을 입력하여 배포된 페이지를 확인할 수 있다.
+
+     ```
+     https://<GitHub아이디>.github.io/<저장소이름>
+     ```
+   * 현재 프로젝트가 빌드(빌드 스크립트 등)되지 않은 상태라면,
+     기본적으로 `README.md` 내용만 표시된다.
+
+---
+
+## 요약
+
+* 로컬에서 프로젝트 준비 → GitHub에 push → Settings > Pages에서 브랜치 지정 → Save
+* 잠시 후 `<아이디>.github.io/<Repo-name>` 에서 배포된 페이지(최초엔 README) 확인
+
+이 과정을 거치면 GitHub Pages를 통해 정적 사이트(또는 빌드된 결과물)를 호스팅할 수 있으며, 빌드 스크립트를 추가하면 곧바로 HTML/CSS/JS 파일을 배포할 수 있습니다.
+
 ---
 
 > # 마치며...
