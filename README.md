@@ -322,14 +322,40 @@ GitHub Pages를 운영하려면 **GitHub Pages 저장소**를 생성.
    * 현재 프로젝트가 빌드(빌드 스크립트 등)되지 않은 상태라면,
      기본적으로 `README.md` 내용만 표시된다.
 
----
 
-## 요약
+### 배포 준비
 
-* 로컬에서 프로젝트 준비 → GitHub에 push → Settings > Pages에서 브랜치 지정 → Save
-* 잠시 후 `<아이디>.github.io/<Repo-name>` 에서 배포된 페이지(최초엔 README) 확인
+> ## 이 방법은 create-react-app 방법이다!!
 
-이 과정을 거치면 GitHub Pages를 통해 정적 사이트(또는 빌드된 결과물)를 호스팅할 수 있으며, 빌드 스크립트를 추가하면 곧바로 HTML/CSS/JS 파일을 배포할 수 있습니다.
+1. 프로젝트에서 인스톨한다.
+```
+npm i gh-pages
+```
+
+2. package.json을 연 후 맨 위에 키 추가
+```
+  "homepage": "https://gabrielp2017.github.io/gitbepotest/",
+  "name": "gitbepotest",
+  "version": "0.1.0",
+```
+
+3. scrupts에 다음을 추가해 커밋및 푸시
+```
+  "scripts": {
+    ...
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  }
+```
+
+4. npm run deploy 한다.
+```
+npm run deploy
+<!-- scripts에 적힌 "deploy": "gh-pages -d build" -->
+```
+
+5. 이러면 github의 설정의 pages의 Branch가 바뀌는데 이걸 gh-pages로 바꿔준다.
+![](./image_READMEver/브랜치바뀜.png)
 
 ---
 
