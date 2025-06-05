@@ -155,12 +155,13 @@ export default function MyApp() {
 ```tsx
 interface MyButtonProps {
   /** 버튼 안에 보여질 텍스트 */
-  title: string;
+  title: string; // props에 타입을 지정해줬다!!
   /** 버튼이 상호작용할 수 있는지 여부 */
-  disabled: boolean;
+  disabled: boolean; // props에 타입을 지정해줬다!!
 }
 
-function MyButton({ title, disabled }: MyButtonProps) {
+
+function MyButton({ title, disabled }: MyButtonProps/* props에 타입을 지정해줬다!! */) {
   return (
     <button disabled={disabled}>{title}</button>
   );
@@ -176,9 +177,143 @@ export default function MyApp() {
 }
 ```
 - **props 타입 설명 가이드**
-
   - 컴포넌트의 props 타입은 원하는 만큼 단순하거나 복잡할 수 있dj 반드시 객체 타입으로 type 또는 interface를 사용해야 한다.
 
+> ## Hooks 예시및 종류
+
+- `@types/react`에는 내장 Hooks에 대한 타입 정의가 포함되어 있어, 추가 설정 없이 컴포넌트에서 바로 사용 가능
+
+- 컴포넌트 코드를 기반으로 대부분의 타입이 자동으로 추론되므로, 별도의 사소한 타입 제공 작업이 거의 필요 없음.
+
+### useState 
+
+**초기값으로 타입 추론**
+```tsx
+// 타입을 "boolean"으로 추론합니다
+const [enabled, setEnabled] = useState(false);
+```
+`enabled`: `boolean`
+`setEnabled`: `boolean` 또는 `() => boolean`을 인수로 받는 함수
+
+**명시적 타입 지정**
+```tsx
+// 명시적으로 타입을 "boolean"으로 설정합니다
+const [enabled, setEnabled] = useState<boolean>(false);
+```
+
+**유니언 타입 상태**
+```tsx
+type Status = "idle" | "loading" | "success" | "error";
+
+// Status 유니언 타입을 지정
+const [status, setStatus] = useState<Status>("idle");
+```
+
+**객체 기반 상태 구조화**
+```tsx
+type RequestState =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'success', data: any }
+  | { status: 'error', error: Error };
+
+// RequestState 객체 유니언 타입을 지정
+const [requestState, setRequestState] = useState<RequestState>({ status: 'idle' });
+```
+
+[ 아래는 훑어보기만 한다 ]
+
+**useRenducer** : useState보다 복잡한 상태로 로직을 처리할 때 사용<br>
+
+**useContext** : 어떤 값을 전역으로 공유하고 싶을 때<br>
+
+**useMemo** : 계산된 결과 값을 기억. 자주 계산해야하는데 값은 똑같을 때 다시 계산할 때 꺼내오는 것. 메모화 해두는 것.<br>
+
+**useCallback** : 함수를 기억. useMemo와 비슷하다.
+
+#### 총 정리
+
+| Hook        | 용도             | 언제 사용하면 좋은가                          |
+|-------------|------------------|---------------------------------------------|
+| useState    | 단순 상태 저장     | 대부분의 기본 상태                           |
+| useReducer  | 복잡한 상태 로직   | 폼, 상태 변경이 많은 컴포넌트                  |
+| useContext  | 전역 상태 공유     | 로그인, 테마 등 여러 컴포넌트 공유 데이터         |
+| useMemo     | 값 캐싱           | 계산 비용이 큰 작업 최적화                     |
+| useCallback | 함수 캐싱         | 함수를 props로 넘길 때, 리렌더 방지             |
+
+> ## React 프로젝트 배포하는 법 ( github )
+
+GitHub Pages를 운영하려면 **GitHub Pages 저장소**를 생성.
+
+저장소 이름은 **도메인 형태**로 해야한다. 또한 최상위 도메인은 `.com`이 아니라 `.io`로 해야한다.
+
+- 저장소 생성 후 작업 방법
+  - GitHub 웹에서 저장소를 만들었다면, 로컬로 **clone**한 뒤 작업하고 **push**
+  - 처음부터 로컬에서 저장소를 만들었다면, 그대로 **push**
+
+이 저장소는 **Github 정적 호스팅**을 하기 위해선 반드시 필요하다.
+
+다른 이름의 저장소도 페이지로 사용 가능하다.
+
+- 기본 저장소: https://<내 깃허브 아이디>.github.io
+- 일반 페이지 저장소 : https://<내 깃허브 아이디>.github.io/<레포지토리 이름>
+
+### 기본 저장소 생성및 접속
+
+# 정적 사이트만 가능. (동적 사이트-실시간으로 뭔가 해야하는 것은 잘 안됨!!)
+# DB,백엔드 를 직접 호출할 수 없다.
+
+> 본인 계정으로 접속해서 레퍼지토리(repository)를 만들고 **public**으로 생성한다.
+<br>💡이유 : Private하면 사람들이 접속이 안되고 접속하게 하려면 유료.
+
+![](./image_READMEver/깃허브레지만드는법.png)
+
+> Github에서 파일을 만드려면 creating a new file 링크를 클릭한다.
+
+![](./image_READMEver/원격으로파일만들기.png)
+
+> 아래는 코드를 작성한다.
+![](./image_READMEver/코드작성공간.png.png)
+
+> 작성이 끝나면 commit을 하고 잠시 후에 브라우저로 접속하기. https://gabrielp2017.github.io/ 로 가면된다.
+
+> ## 추가 페이지 만들 수 있는가?
+> GitHub 계정당 “사용자(또는 조직) 페이지”는 **단 하나**만 만들 수 있다.
+> <아이디>.github.io 저장소는 오직 **하나만 존재**
+> 추가로 페이지를 만들고 싶다면 “프로젝트 페이지”로 생성.
+> ( https://<아이디>.github.io/<저장소이름>/ )
+
+### 배포할 프로젝트 저장소 생성
+
+---
+
+> # 마치며...
+
+개발자 도구(useRenducer~), 컴파일러는 따로 학습하기.
+
+## 이번 강의에서 학습한 Get Started
+1. **Quick Start**
+   - React의 전체 내용을 빠르게 학습할 수 있도록 개괄적인 설명 제공
+   - Tic-Tac-Toe 게임 개발을 통해 React의 주요 개념을 실제 프로젝트에 적용하는 방법 소개
+   - React 프로젝트의 단계별 개발 과정을 순서대로 설명
+2. **Installation**
+   - 다양한 프로젝트 상황에 맞춰 React를 도입하는 방법 학습
+3. **Setup**
+   - 개발 환경 설정 및 TypeScript 도입 방법 학습
+
+## Learn React 학습 주제
+- **UI로 표현하기**  
+  - Quick Start에서 학습한 내용을 심화하여 UI 작성 기법을 학습
+- **상호작용 더하기**  
+  - State 개념을 심화하여 컴포넌트 간 상호작용 구현 방법을 학습
+- **State 관리하기**  
+  - 고급 상태 관리 기법 학습  
+  - `useState` 외에 `useReducer`, `useContext` 등을 활용하는 방법 설명
+- **Escape Hatches (예외적 처리 방법)**  
+  - React 외부 시스템과의 제어 및 동기화 방법  
+  - 고급 심화 과정을 다룸
+
+복습 시 `Quick Start` 를 주로 보면 된다.
 
 ## 2025.05.29(13주차)
 
