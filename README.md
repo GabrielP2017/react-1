@@ -1,5 +1,185 @@
 # 202030222 이강민
 
+## 2025.06.05(14주차)
+
+### 2단계: 페이지 어디에서든 React 컴포넌트 렌더링하기 
+
+```jsx
+import { createRoot } from 'react-dom/client';
+
+// 기존 HTML 컨텐츠를 지웁니다.
+document.body.innerHTML = '<div id="app"></div>';
+
+// 대신에 여러분이 작성한 React 컴포넌트를 렌더링합니다.
+const root = createRoot(document.getElementById('app'));
+root.render(<h1>Hello, world</h1>);
+```
+렌더링할 `<div>` 요소에 고유한 `id`를 부여하여
+React 진입점에서 `document.getElementById`로 해당 요소를 찾아 컴포넌트를 연결
+
+**createRoot(script,변수)** : 해당 요소 내부에 React 컴포넌트를 렌더링
+
+**.render()** : 안에 적힌 내용을 연결해줌.
+
+```jsx
+import { createRoot } from 'react-dom/client';
+
+function NavigationBar() {
+  // TODO: 실제로 네비게이션 바를 구현합니다.
+  return <h1>Hello from React!</h1>;
+}
+
+const domNode = document.getElementById('navigation');
+const root = createRoot(domNode);
+root.render(<NavigationBar />);
+```
+- **기존 HTML 유지**: 기존에 작성된 `index.html`의 원본 콘텐츠는 삭제되지 않고 그대로 남아 있다.
+- **영역 지정 렌더링**: `<nav id="navigation">` 요소 안에만 React로 구현한 `NavigationBar` 컴포넌트가 삽입된다.
+- **점진적 도입 권장**:  
+  1. 작은 상호작용 컴포넌트(예: 버튼)부터 React로 만들어보기.  
+  2. 점차 상위 구조(페이지의 일부 섹션 → 페이지 전체)로 확장  
+  3. 최종적으로 페이지 전체를 React 프레임워크 기반으로 마이그레이션하는 것을 추천
+
+---
+
+> ## 에디터 설정하기
+
+### 에디터
+
+| 에디터       | 주요 특징                                                          |
+|-------------|-------------------------------------------------------------------|
+| **VS Code**    | - 가장 많이 사용하는 에디터<br>- 무수한 확장Extension 지원<br>- GitHub 등 외부 서비스 연동 용이  |
+| **WebStorm**   | - JavaScript/React에 특화된 IDE<br>- 코드 완성, 리팩토링, 디버깅 도구 내장                   |
+| **Sublime Text** | - 경량 에디터로 빠른 실행 속도<br>- JSX 및 TypeScript 기본 지원<br>- 문법 강조 및 자동 완성 제공 |
+| **Vim**         | - UNIX 및 macOS에 기본 탑재된 텍스트 편집기<br>- 커맨드 기반 효율적 텍스트 편집<br>- 플러그인으로 확장 가능 |
+
+### 에디터 기능 추천
+
+#### 린팅(Linting)
+- **정의**: 코드 작성 중 실시간으로 오류나 스타일 위반을 검사하여 개발자가 즉시 수정할 수 있도록 돕는 도구.  
+- **ESLint**  
+  - JavaScript용으로 가장 널리 쓰이는 린터.
+  - **설치 전제 조건**: Node.js가 설치되어야 한다. (`npm install eslint --save-dev` 등).  
+  - **React용 설정**  
+    1. `eslint-plugin-react-hooks` 플러그인은 React 훅 규칙을 체크
+       - **역할**: `useState`, `useEffect` 등의 훅 규칙(배열 의존성, 최상위 호출 등)을 강제하여, 잠재적 버그를 사전에 방지
+    2. `eslint-config-react-app`  
+       - Create React App(CRA)에서 권장하는 ESLint 설정 프리셋
+       - CRA 프리셋에는 이미 `eslint-plugin-react-hooks` 규칙이 포함되어 있어 별도 수동 활성화 없이도 기본 훅 규칙을 적용할 수 있다.
+
+#### 포맷팅(Formatting)
+- **정의**: 코드 스타일(탭 vs 공백)을 자동으로 일관되게 정리해 주는 도구.
+- **Prettier**
+  - 설정해 둔 규칙(예: 탭 너비, 세미콜론 유무, 따옴표 유형 등)에 맞춰 코드를 포맷팅
+  - 저장 시점에 자동 실행하도록 하면, 팀원 간 코드 스타일 차이로 인한 논쟁을 예방
+
+- **VS Code에서 Prettier 설치 및 자동 포맷팅 설정**  
+  1. VS Code 실행하기
+  2. 퀵오픈 (Ctrl/Cmd + P)에서 `ext install esbenp.prettier-vscode` 입력 후 설치
+  3. 저장할 때마다 자동 포맷팅
+     - Ctrl/Cmd + Shift + P 입력 → “Settings” 선택
+     - 검색 창에 “format on save” 입력
+     - “Format On Save” 옵션이 **체크**되어 있는지 확인
+
+> ## TypeScript 사용하기
+
+TypeScript는 JavaScript 코드 베이스에 타입 정의를 추가하는 데 널리 사용되는 방법. 
+
+기본적으로 TypeScript는 JSX를 지원하며, @types/react 및 @types/react-dom을 추가하면 완전한 React Web 지원을 받을 수 있다.
+
+### 설치
+
+모든 프로덕션 수준의 React 프레임워크는 TypeScript 사용을 지원한다. 프레임워크별 설치 가이드를 따르기!
+
+[Next.js](https://nextjs.org/docs/app/api-reference/config/typescript)<br>
+[Remix](https://remix.run/docs/en/1.19.2/guides/typescript)<br>
+[Gatsby](https://www.gatsbyjs.com/docs/how-to/custom-configuration/typescript/)<br>
+[Expo](https://docs.expo.dev/guides/typescript/)<br>
+
+### 기존 React 프로젝트에 TypeScript 추가하기 
+
+최신 버전의 React 타입 정의를 설치
+```
+npm install @types/react @types/react-dom
+```
+다음 컴파일러 옵션을 tsconfig.json에 설정.
+
+1. dom은 lib에 포함되어야 한다!!(⚠️: lib 옵션이 지정되지 않으면, 기본적으로 dom이 포함됩니다).
+2. jsx를 유효한 옵션 중 하나로 설정. 대부분의 애플리케이션에서는 preserve로 충분.
+
+> tsconfig.json 설정
+```jsx
+{
+  "compilerOptions": {
+    "lib": ["dom"],
+    "jsx": "preserve"
+  }
+}
+```
+
+### React 컴포넌트가 있는 TypeScript
+
+**⚠️중요!!⚠️**
+- JSX를 포함하는 모든 파일은 .tsx 확장자를 사용해야 한다. 
+- TypeScript에게 해당 파일이 JSX를 포함하고 있음을 알려준다.
+
+- **React + TypeScript 작성 방식**  
+  - JavaScript로 React 작성과 매우 유사 
+  - 가장 큰 차이점은 컴포넌트의 props에 타입을 제공할 수 있다는 점
+  - 타입을 제공하면 에디터에서 정확성 검사와 인라인 문서 기능을 활용 가능
+
+```tsx
+function MyButton({ title }: { title: string }) {
+  return (
+    <button>{title}</button>
+  );
+}
+
+export default function MyApp() {
+  return (
+    <div>
+      <h1>Welcome to my app</h1>
+      <MyButton title="I'm a button" />
+    </div>
+  );
+}
+```
+- **샌드박스 환경 주의사항**
+  - 이 문서에 있는 샌드박스들은 TypeScript 코드를 다룰 수는 있지만, 타입 검사는 수행하지 않음.
+  - 타입 오류나 경고를 보려면 TypeScript Playground나 더 완전한 기능을 갖춘 온라인 샌드박스를 사용해야 한다.
+
+- **interface 또는 type 사용 권장**
+  - 인라인 타입 지정은 필드가 많아지면 다루기 어려워질 수 있다!!
+  - 대신 interface나 type을 사용해 props를 설명하는 것을 권장.
+
+```tsx
+interface MyButtonProps {
+  /** 버튼 안에 보여질 텍스트 */
+  title: string;
+  /** 버튼이 상호작용할 수 있는지 여부 */
+  disabled: boolean;
+}
+
+function MyButton({ title, disabled }: MyButtonProps) {
+  return (
+    <button disabled={disabled}>{title}</button>
+  );
+}
+
+export default function MyApp() {
+  return (
+    <div>
+      <h1>Welcome to my app</h1>
+      <MyButton title="I'm a disabled button" disabled={true}/>
+    </div>
+  );
+}
+```
+- **props 타입 설명 가이드**
+
+  - 컴포넌트의 props 타입은 원하는 만큼 단순하거나 복잡할 수 있dj 반드시 객체 타입으로 type 또는 interface를 사용해야 한다.
+
+
 ## 2025.05.29(13주차)
 
 ### 애플리케이션 성능 개선
@@ -43,12 +223,12 @@
 
 ---
 
-## 기존 프로젝트에 React 추가하기
+> ## 기존 프로젝트에 React 추가하기
 
 [인터랙티브 기능](. "사용자와 시스템간의 상호 작용을 가능하게 하는 기능")을 추가하고 싶다고 react로 프로젝트를 다시 작성할 필요는 없다.
 기존 스택에 React를 추가하면 된다.
 
-#### 기존 웹사이트의 하위 경로 전체에 React 사용하기
+### 기존 웹사이트의 하위 경로 전체에 React 사용하기
 
 예를 들어 Rails, Django 같은 전통적인 서버 기술로 빌드된 기존 웹 앱(`example.com`)이 있고, 그 하위 경로인 `/some-app/`에 해당하는 모든 요청을 React로 완전 대체하고 싶다면 아래와 같이 한다.
 
@@ -123,7 +303,7 @@ root.render(<h1>Hello, world</h1>);
 
 - 요즘은 create-react-app 보다 Vite, Next.js를 많이 쓴다.
 
-### 프로젝트에 도입하기
+> ## 프로젝트에 도입하기
 
 React는 **점진적 적용**이 가능하도록 설계.
 즉, 필요한 만큼만 React를 도입해도 되고, 나중에 더 확장해도 무방하다. 
@@ -137,7 +317,7 @@ React는 **점진적 적용**이 가능하도록 설계.
 
 ---
 
-#### React 시도하기
+### React 시도하기
 
 local에서 react를 사용하고 싶다면 Node.js 설치.
 
@@ -145,7 +325,7 @@ React 문서 외에도 [CodeSandbox](https://codesandbox.io), [StackBlitz](https
 
 ---
 
-#### 새로운 React 앱 만들기
+### 새로운 React 앱 만들기
 
 React로 새 앱이나 웹사이트를 만들 때는 **프레임워크 활용**이 가장 쉽고 빠른 방법!!
 
@@ -183,7 +363,7 @@ React로 새 앱이나 웹사이트를 만들 때는 **프레임워크 활용**�
 
 ---
 
-#### 프레임워크 종류
+### 프레임워크 종류
 
 | 프레임워크                     | 주요 특징                                                                                                                                                                  |
 |-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -208,7 +388,7 @@ React로 새 앱이나 웹사이트를 만들 때는 **프레임워크 활용**�
 
 ---
 
-#### 프레임워크 자체 제작
+### 프레임워크 자체 제작
 
 🔍 기존 프레임 워크를 사용하지 않고 직접 하는게 좋을 경우
 
@@ -223,7 +403,7 @@ React로 새 앱이나 웹사이트를 만들 때는 **프레임워크 활용**�
 
 ---
 
-#### 1단계: 빌드 도구 설치
+> ### 1단계: 빌드 도구 설치
 
 앱을 처음부터 시작할 때는 **Vite**, **Parcel**, **rsbuild** 등과 같은 빌드 도구를 설치.<br>
 이들 도구는 다음 기능을 제공한다.
@@ -299,7 +479,7 @@ React Native 프로젝트를 **처음부터** 설정하려면 JavaScript 번들�
 
 ---
 
-#### 2단계: 공통 애플리케이션 패턴 구축
+> ### 2단계: 공통 애플리케이션 패턴 구축
 
 위에서 소개한 빌드 도구(Vite, Parcel, Rsbuild 등)들은 **클라이언트 전용 SPA**를 빠르게 시작하는 데 특화되어 있지만, 다음과 같은 일반 기능은 별도 도구가 필요❗❗
 
@@ -434,9 +614,9 @@ function About() {
 
 ## 2025.05.15(11주차)
 
-### React로 사고하기
+> ## React로 사고하기
 
-#### Step 3: 최소한의 데이터만 이용해서 완벽하게 UI State 표현 - 2
+### Step 3: 최소한의 데이터만 이용해서 완벽하게 UI State 표현 - 2
 
 1. 예시 설명
 
@@ -466,7 +646,7 @@ function About() {
 
 ---
 
-#### Step 4: State가 어디에 있어야 할지 정하기
+### Step 4: State가 어디에 있어야 할지 정하기
 
 앱에서 최소한으로 필요한 state를 결정한 후, 다음으로 “어떤 컴포넌트가 해당 state를 소유하고 변경할 책임을 가질지” 정해야 한다.
 React는 항상 부모 → 자식으로 데이터를 전달하는 **단방향 데이터 흐름**을 사용.
@@ -528,7 +708,7 @@ function FilterableProductTable({ products }) {
 
 ---
 
-#### Step 5: 역 데이터 흐름 추가
+### Step 5: 역 데이터 흐름 추가
 
 이제 사용자 입력에 따라 state를 변경하려면 반대 방향의 데이터 흐름을 만들어야 한다.
 
@@ -585,7 +765,7 @@ function SearchBar({ filterText, inStockOnly, onfilterTextchange, onisStockOnlyc
 
 ## 2025.05.08(10주차)
 
-### React로 사고하기
+> ## React로 사고하기
 
 1. **사고 전환**  
    - React 사용 시 앱 설계 방식과 디자인 사고가 달라짐.
@@ -600,6 +780,7 @@ function SearchBar({ filterText, inStockOnly, onfilterTextchange, onisStockOnlyc
 ( 컴포넌트의 조각들이 어떻게 APP으로 완성되는지 확인 하기 )💡
 
 ---
+
 
 ### 모의 시안과 함께 시작하기 
 
@@ -627,7 +808,7 @@ JSON API는 아래와 같은 형태의 데이터를 반환
 5. 역 데이터 흐름 추가
 ---
 
-#### Step 1: 컴포넌트를 계층으로 쪼개기
+### Step 1: 컴포넌트를 계층으로 쪼개기
 
 1. **목업(Mock) 분석**  
    - 화면에 보이는 모든 컴포넌트와 하위 컴포넌트 주변에 사각형 박스를 그리고 이름을 붙인다. 
@@ -671,7 +852,7 @@ FilterableProductTable
 ```
 ---
 
-#### Step 2: 정적인 버전을 구현
+### Step 2: 정적인 버전을 구현
 
 목표: 데이터 모델로부터 UI를 렌더링하는 정적 버전을 먼저 구현
 
@@ -712,7 +893,7 @@ FilterableProductTable
 
 ---
 
-#### Step 3: 최소한의 데이터만 이용해서 완벽하게 UI State 표현
+### Step 3: 최소한의 데이터만 이용해서 완벽하게 UI State 표현
 
 UI를 상호작용(interactive)하게 만들려면 사용자가 기반 데이터 모델을 변경할 수 있게 해야 한다. **React**는 이를 위해 **state**를 제공
 
@@ -759,6 +940,7 @@ const count = items.length;
    - 계산 가능하다면 → **State 아님** ❌
 
 > 위 세 가지 모두 해당되지 않는 **나머지 데이터**가 **State**여야 한다!
+
 
 ## 2025.04.18(보강-9주차)
 
@@ -1082,9 +1264,9 @@ export default function Game() {
 
 ## 2025.04.17(7주차)
 
-### state 끌어올리기
+> ## state 끌어올리기
 
-#### 원리
+### 원리
 
 1. handleClick 함수는 JavaScript의 slice() 배열 메서드를 사용하여 squares 배열의 사본 nextSquares를 생성.
 
@@ -1154,7 +1336,7 @@ handleClick(0)을 호출하는 handleFirstSquareClick 함수를 만들고, handl
 
 ---
 
-#### 데이터 흐름 정리
+### 데이터 흐름 정리
 
 1. **Board → Square**  
    *Board*가 `value`와 `onSquareClick`을 **props**로 내려줌 → Square가 화면을 올바르게 표시.
@@ -1165,14 +1347,14 @@ handleClick(0)을 호출하는 handleFirstSquareClick 함수를 만들고, handl
 
 ---
 
-#### 왜 Board가 state를 갖고 있을가?
+### 왜 Board가 state를 갖고 있을가?
 
 - **한곳**에서 9개 칸의 값을 관리해야 **승자 계산**과 같은 로직을 쉽게 구현할 수 있음.
 - 자식이 여러 개라도 부모‑state가 변경되면 리액트가 **자동으로 필요한 부분만 다시 그려** 성능·일관성을 보장함.
 
 ---
 
-#### 💡중요!! : React 이벤트 핵심 정리
+### 💡중요!! : React 이벤트 핵심 정리
 이름들은 개발자가 원하는 이름을 넣어도 되지만, 관레상 이벤트를 나타내는 것들은 아래와 같이 이름을 지어준다.
 
 | 구분 | 역할 | 이름 규칙 |
@@ -1211,7 +1393,7 @@ const nextSquares = ['X', null, null, null, null, null, null, null, null];
 
 ---
 
-#### 불변성의 장점
+### 불변성의 장점
 
 1. 데이터를 직접 변경하지 않으면 복잡한 기능을 훨씬 쉽게 구현
 
@@ -1271,7 +1453,7 @@ square가 이미 채워져 있는 경우. state를 업데이트 하기 전에 ha
 
 ---
 
-#### return의 의미
+### return의 의미
 
 `return 값이 없다 == 함수를 즉시 종료 하라는 의미`<br>
 return 값이 없으면 자동으로 undefined를 반환.<br>
@@ -1354,7 +1536,7 @@ export default function Board() {
 
 ---
 
-#### 구조 분해 할당
+### 구조 분해 할당
 
 배열이나 객체의 구조를 해체하여 내부 값을 개별 변수에 쉽게 할당하는 방법.
 
@@ -1380,13 +1562,13 @@ console.log(grape);  // 🍇
 
 ---
 
-### 시간여행 추가하기
+> ## 시간여행 추가하기
 
 시간을 거슬러 올라가는 기능 만들기.
 
 ---
 
-#### 플레이 히스토리 저장
+### 플레이 히스토리 저장
 
 - squares 배열을 변형하면 시간 여행을 구현하기는 매우 어렵다.
 - slice()를 사용하여 플레이어가 클릭할 때마다 squares 배열의 새 복사본을 만들어 불변성을 유지했다.
@@ -1409,7 +1591,7 @@ history는 다음과 같은 모양을 같는다.
 
 ---
 
-#### 한 번 더 state 끌어올리기
+### 한 번 더 state 끌어올리기
 
 과거 이동 목록을 표시하기 위해 새로운 최상위 컴포넌트 Game을 작성하기.
 
@@ -1699,7 +1881,7 @@ __각 버튼이 고유한 `count` state를 “기억”하고 다른 버튼에 �
 
 --- 
 
-### Hook 사용하기
+> ## Hook 사용하기
 
 > Hook : use로 시작하는 함수
   - useState는 React에서 제공하는 내장 Hook
@@ -1712,7 +1894,7 @@ __각 버튼이 고유한 `count` state를 “기억”하고 다른 버튼에 �
 
 ---
 
-#### 사용 규칙
+### 사용 규칙
 
 __최상위에서만 호출__
   - if, for, while 등의 블록 내부에서 Hooks 호출은 안됨.
@@ -1731,7 +1913,7 @@ function MyCompo(){
 
 ---
 
-#### ❓왜 이런 제한을 거는가?
+### ❓왜 이런 제한을 거는가?
 - _rendering 순서를 보장하기 위해(동작을 예측 가능)_<br>
 조건문이나 반복문 안에서 Hooks를 사용하면 Hook의 호출 순서가 달라질 수 있기 때문. 상태를 제대로 추적 못함.
 - _불필요한 사이드 이펙트 방지(안정성)_<br>
@@ -1739,7 +1921,7 @@ function MyCompo(){
 
 ---
 
-#### finction형 컴포넌트에서만 Hook을 사용하는 이유
+### finction형 컴포넌트에서만 Hook을 사용하는 이유
 1. Class형 component는 lifecycle 함수를 통해서 상태 관리함.
 2. Class형 component는 유지보수가 어렵고 복잡해질 수 있었음.
 3. lifecycle과 로직을 더 간결하게 만들기 위해 Hook을 도입<br>
@@ -1748,9 +1930,11 @@ function MyCompo(){
 
 __⚠️Hook은 function형 component 전용으로 설계__
 
+```
+```
 ---
 
-#### fun형 컴포넌트 vs class 컴포넌트
+### fun형 컴포넌트 vs class 컴포넌트
 
 1. 초창기(2013년 5.29 ~ 2014년) : 
     - 함수형 컴포넌트는 존재했지만 props를 받아 UI를 반환하는 역할만 가능. 그래서 __상태(state)나 생명주기(lifecycle) 기능이 없었다__
@@ -1791,7 +1975,7 @@ __각 컴포넌트가 독립적으로 작동하기 때문이다.__
 
 ---
 
-#### ⚠️ 하지만 데이터를 공유하고 항상 함께 업데이트가 필요하다.
+> #### ⚠️ 하지만 데이터를 공유하고 항상 함께 업데이트가 필요하다.
 
 __동일한 count를 표시하고 함께 업데이트__ 하려면 state를 개별 버튼에서 모든 버튼이 포함된 가장 가까운 component 안으로 이동해야함.<br>
 __이러한 방법을 props라고 한다.__
@@ -1882,9 +2066,9 @@ export default function MyApp() {
 
 ---
 
-### 틱택토 게임 만들기
+> ## 틱택토 게임 만들기
 
-#### React 앱을 만드는데 기본이 되는 기술을 배우며, 더 깊게 이해할 수 있게된다.
+### React 앱을 만드는데 기본이 되는 기술을 배우며, 더 깊게 이해할 수 있게된다.
 
 > 기획
 틱택토 게임이란 ? : 3개의 말을 한줄로 완성하면 승리함.
@@ -1899,8 +2083,6 @@ export default function MyApp() {
 
 9개의 버튼을 복사하면 일렬로 배치됨
 button을 3구역으로 나눠준다.
-
-
 
 ## 2025.03.27(4주차)
 
@@ -1931,7 +2113,7 @@ export default MyApp;
 
 ---
 
-#### export default = 기본 컴포넌트 지정
+### export default = 기본 컴포넌트 지정
 
 __[ export default와 export의 차이 ]__
 - __(Named)export__
@@ -1943,7 +2125,7 @@ __[ export default와 export의 차이 ]__
 
 ---
 
-#### export default 예시
+### export default 예시
 
 > Mybutton.js
 ```JS
@@ -1974,7 +2156,7 @@ export default function App() {
 
 ---
 
-#### (Named)export 예시
+### (Named)export 예시
 
 >ButtonLib.js
 ```JS
@@ -2006,16 +2188,16 @@ import { Button,Button2 } from './ButtonLib'; // named export로써 필요한것
 ```
 ---
 
-### 마크업과 스타일 추가
+> ## 마크업과 스타일 추가
 
-#### JSX
+### JSX
 - 마크업 문법
 - 편의성을 위해서 사용
 - HTML보다 더욱 엄격하다.
 - ```<br/>```같이 싱글 태그라도 무조건 __닫아야한다.__
 - 컴포넌트를 JSX태그로 변환
 - 컴포넌트를 ```<>...</>```나 ```<div>...</div>```처럼 감싸줘야한다.
-  ```jsx
+```jsx
   export default function App() {  
     return(
       <> {/* 이런식으로 감싸줘야한다. 아니면 에러남 */}
@@ -2027,12 +2209,14 @@ import { Button,Button2 } from './ButtonLib'; // named export로써 필요한것
 
 ---
 
-#### 스타일(style)
+### 스타일(style)
 
 - className으로 CSS클래스 지정. className은 HTML의 class 속성과 동일.
+
 ```
 <img className="a"/>
 ```
+
 - CSS파일을 추가하는 방법을 규정하진 않음.
 - HTML에 `<link>` 태그로 연결시켜주는 방법은 추천하지 않는다
 (WHY? 정적 페이지를 수정해야 하기 때문에.)
@@ -2040,8 +2224,11 @@ import { Button,Button2 } from './ButtonLib'; // named export로써 필요한것
 <div style={{textAlign: 'center'}}></div>
 ```
 직접 하려면 이런 식으로 한다.
-
+```
+```
 ---
+
+
 ### 데이터 표시 = {}
 
 > JSX를 사용하면 JS에 마크업을 넣는다 = JS안의 마크업 안에 JS를 넣는다.
@@ -2056,6 +2243,7 @@ return(
   </>
 )
 ```
+
 ```jsx
 // src에 user.imageurl 변수 값을 전달하여 이미지의 경로를 설정.
 return(
@@ -2065,9 +2253,9 @@ return(
 ```
 
 ---
-### 조건부 랜더링과 목록 랜더링
+> ## 조건부 랜더링과 목록 랜더링
 
-#### 조건문(조건부 랜더링)
+### 조건문(조건부 랜더링)
 > if-else 
 ```jsx
   //조건부로 jSX포함 가능.
@@ -2113,7 +2301,7 @@ let isLoggedin = true;
 
 ---
 
-#### 리스트(목록 랜더링)
+### 리스트(목록 랜더링)
 
 - for문 및 map()을 사용해서 랜더링.
 - Map()은 ```<li>```에 속성이 있다.
@@ -2360,7 +2548,7 @@ __웹의 본질__
 
 ---
 
-#### 결론 : 빠른 랜더링을 도와줌.
+> #### 결론 : 빠른 랜더링을 도와줌.
 
 __진정한 네이티브 UX 구현__
 - React Native와 Expo를 사용 => Android, iOS 등을 위한 앱을 React로 빌드.
